@@ -29,11 +29,9 @@ const page = () => {
         </p>
       </div>
     </div>
-     <div>
-       <p className="text-gray-700 mb-4">
+     <div >
+       <p className="text-gray-700 mb-4 p-5">
           At Prachi trades, we are more than just suppliers—we are the trusted foundation behind your most ambitious visions in construction, architecture, and design. With deep roots in the industry, we specialize in delivering premium building essentials—ranging from high-strength rods and structural steel to an exquisite selection of marble, hard stone, and finely graded sand.
-        </p>
-        <p className="text-gray-700 mb-4">
           What sets us apart is our unwavering commitment to quality at every stage: from sourcing raw materials at ethically managed quarries to ensuring precision-cut stone slabs tailored to your exact needs.
         </p>
     </div>

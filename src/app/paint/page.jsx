@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
 import BrandsSection from "@/components/sections/brand-section";
@@ -21,51 +21,59 @@ export default function paint() {
       </h2>
 
       <div className="flex justify-center space-x-4 overflow-x-auto p-4">
-        {/* Steel Card */}
-        <div className="bg-white border rounded-xl shadow-md p-6 w-72 min-w-[270px] relative">
-          <img src="/steel.png" alt="Steel" className="h-20 mx-auto mb-4" />
-          <h3 className="text-xl font-bold mb-2">Steel</h3>
-          <p className="text-sm mb-4">
+        {/* Asian Card */}
+        <div className="bg-white border rounded-xl shadow-md  w-72 min-w-[270px] relative">
+          <img src="/asian.png" alt="Steel" className="h-60 w-full mx-auto mb-5" />
+          <h3 className="text-xl font-bold mb-5">Asian Paint</h3>
+          <p className="text-sm mb-5">
             Jindal Panther 550D, JSW steel 550D, SMC 550D, SEL 500D, Tata Tiscon 550D
           </p>
-          <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold">
+          <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold mb-5">
+              <Link href="wallpaint" className="block px-4 py-2">
             VIEW PRODUCTS
+            </Link>
           </button>
         </div>
 
-        {/* Cement Card */}
-        <div className="bg-white border rounded-xl shadow-md p-6 w-72 min-w-[270px] relative">
-          <img src="/cement.png" alt="Cement" className="h-20 mx-auto mb-4" />
-          <h3 className="text-xl font-bold mb-2">Cement</h3>
-          <p className="text-sm mb-4">
-            DALMIA, Nuvoco, Ultratech, Maha Shakti, Raasi, Ramco, PPC, PSC, OPC53/43 GRADES
+        {/* Putty Card */}
+        <div className="bg-white border rounded-xl shadow-md  w-72 min-w-[270px] relative">
+          <img src="/putty.png" alt="Cement" className="h-60 w-full mx-auto mb-5" />
+          <h3 className="text-xl font-bold mb-5">Putty</h3>
+          <p className="text-sm mb-5">
+            DALMIA, Nuvoco, Ultratech, Maha Shakti, Raasi, Ramco, PPC, PSC
           </p>
-          <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold">
+          <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold mb-5">
+             <Link href="wallpaint" className="block px-4 py-2">
             VIEW PRODUCTS
+            </Link>
           </button>
         </div>
 
-        {/* RMC Card */}
-        <div className="bg-white border rounded-xl shadow-md p-6 w-72 min-w-[270px] relative">
-          <img src="/rmc.png" alt="RMC" className="h-20 mx-auto mb-4" />
-          <h3 className="text-xl font-bold mb-2">RMC</h3>
-          <p className="text-sm mb-4">
+        {/* surya Card */}
+        <div className="bg-white border rounded-xl shadow-md  w-72 min-w-[270px] relative">
+          <img src="/surya.png" alt="RMC" className="h-60 w-full mx-auto mb-5" />
+          <h3 className="text-xl font-bold mb-5">Surya Pluse</h3>
+          <p className="text-sm mb-5">
             Ultratech, DALMIA, Nuvoco, Ultratech, Maha Shakti, Raasi, Ramco
           </p>
-          <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold">
+          <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold mb-5">
+             <Link href="wallpaint" className="block px-4 py-2">
             VIEW PRODUCTS
+            </Link>
           </button>
         </div>
 
-        {/* Roofing Sheets Card */}
-        <div className="bg-white border rounded-xl shadow-md p-6 w-72 min-w-[270px] relative">
-          <img src="/roofing.png" alt="Roofing Sheets" className="h-20 mx-auto mb-4" />
-          <h3 className="text-xl font-bold mb-2">Roofing Sheets</h3>
-          <p className="text-sm mb-4">
+        {/* indigo Card */}
+        <div className="bg-white border rounded-xl shadow-md  w-72 min-w-[270px] relative">
+          <img src="/indigo.jpg" alt="Roofing Sheets" className="h-60 w-full mx-auto mb-5" />
+          <h3 className="text-xl font-bold mb-5">Indigo</h3>
+          <p className="text-sm mb-5">
             Ultratech, DALMIA, Nuvoco, Ultratech, Maha Shakti, Raasi, Ramco
           </p>
-          <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold">
+          <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold mb-5">
+             <Link href="wallpaint" className="block px-4 py-2">
             VIEW PRODUCTS
+            </Link>
           </button>
         </div>
       </div>

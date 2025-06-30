@@ -24,8 +24,8 @@ export default function Header() {
 
         {/* Left: Logo */}
         <Link href="/" className="flex items-center">
-          <div className="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center">
-            <span className="text-white font-bold text-lg">P</span>
+          <div className="w-50 h-10  flex items-center justify-center">
+            <img src="/logo.png" alt="Steel"    />
           </div>
         </Link>
 
@@ -62,7 +62,10 @@ export default function Header() {
 
           {/* Vertical Contact Button */}
           <div className="bg-orange-500    absolute -right-3 top-8 text-white text-sm px-8  py-2 rotate-90 origin-bottom-right cursor-pointer hover:bg-orange-600">
+           <Link href="/contact">
            <span className="p-2 rotate-90"> Contact</span>
+           </Link>
+           
           </div>
 
         </div>

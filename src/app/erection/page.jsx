@@ -30,8 +30,8 @@ export default function CementPage() {
        <section className="relative h-96 flex items-center justify-center overflow-hidden">
       {/* Background image with blur effect */}
       <div 
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/cement6.jpg')" }}
+        className="absolute inset-0 bg-cover bg-center bg-cyan-400"
+       
       ></div>
       
       {/* Dark overlay to improve text readability */}

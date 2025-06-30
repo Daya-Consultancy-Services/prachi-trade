@@ -10,11 +10,11 @@ const brands = [
   { id: 1, src: "/brands/cement6.png", alt: "Maha Cement" },
   { id: 2, src: "/brands/cement7.jpg", alt: "Ultratech" },
   { id: 3, src: "/brands/cement8.png", alt: "Ramco" },
-  { id: 4, src: "/brands/cement9.png", alt: "Raasi Gold" },
+  { id: 4, src: "/brands/jk-cement.jpg", alt: "Raasi Gold" },
   { id: 5, src: "/brands/cement10.png", alt: "Iuvo" },
   { id: 6, src: "/brands/ambuja.jpg", alt: "Ambuja" },
   { id: 7, src: "/brands/ultratech.png", alt: "Ultratech" },
-  { id: 8, src: "/brands/cement9.png", alt: "Raasi Gold" },
+  { id: 8, src: "/brands/jk-cement.jpg", alt: "Raasi Gold" },
 ];
 
 export default function BrandsSection() {

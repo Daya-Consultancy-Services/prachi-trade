@@ -56,7 +56,7 @@ export default function ContactModal() {
                 <textarea
                   placeholder="Your Message *"
                   className="w-full border rounded-full px-4 py-2 focus:outline-none"
-                  rows="3"
+                  rows="2"
                 ></textarea>
               </div>
 

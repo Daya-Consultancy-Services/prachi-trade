@@ -30,16 +30,16 @@ export default function CementPage() {
        <section className="relative h-96 flex items-center justify-center overflow-hidden">
       {/* Background image with blur effect */}
       <div 
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/cement6.jpg')" }}
+        className="absolute inset-0 bg-cover bg-center bg-orange-300"
+        
       ></div>
       
       {/* Dark overlay to improve text readability */}
       <div className="absolute inset-0 bg-black opacity-30"></div> 
 
       {/* Text content - remains clear */}
-      <div className="relative text-white max-w-2xl text-center px-4">
-        <h1 className="text-4xl md:text-4xl font-bold mb-4">
+      <div className="relative text-white max-w-5xl text-center px-4">
+        <h1 className="text-lg md:text-4xl font-bold mb-4">
           THE BEST CEMENT DEALER TO SAFEGUARDING YOUR CONSTRUCTIONAL SOLUTION
         </h1>
         <p className="text-lg md:text-sm opacity-90">
@@ -56,7 +56,7 @@ export default function CementPage() {
       {/* UltraTech Cement - Full Width */}
       <div className="w-full bg-white py-10 px-4 flex flex-col md:flex-row items-center justify-center gap-8">
         <div className="max-w-6xl w-full flex flex-col md:flex-row items-center gap-8">
-          <Image src="/cement1.png" alt="UltraTech Cement" width={800} height={800} />
+          <Image src="/cement1.png" alt="UltraTech Cement" width={400} height={800} />
           <div>
             <h2 className="text-xl font-bold mb-3">UltraTech Cement</h2>
             <p className="mb-3">
