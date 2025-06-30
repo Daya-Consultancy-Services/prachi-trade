@@ -9,7 +9,7 @@ import "swiper/css/navigation";
 const brands = [
   { id: 1, src: "/brands/cement6.png", alt: "Maha Cement" },
   { id: 2, src: "/brands/cement7.jpg", alt: "Ultratech" },
-  { id: 3, src: "/brands/cement8.png", alt: "Ramco" },
+  { id: 3, src: "/brands/asianpaint logo.png", alt: "Ramco" },
   { id: 4, src: "/brands/jk-cement.jpg", alt: "Raasi Gold" },
   { id: 5, src: "/brands/cement10.png", alt: "Iuvo" },
   { id: 6, src: "/brands/ambuja.jpg", alt: "Ambuja" },

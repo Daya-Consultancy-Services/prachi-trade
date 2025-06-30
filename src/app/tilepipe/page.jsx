@@ -24,7 +24,7 @@ export default function tilepipe() {
         {/* Steel Card */}
         <div className="bg-white border rounded-xl shadow-md  w-72 min-w-[270px] relative">
           <img src="/tile1.png" alt="Steel" className="h-60 w-full mx-auto mb-5" />
-          <h3 className="text-xl font-bold mb-5">Steel</h3>
+          <h3 className="text-xl font-bold mb-5">Tiles</h3>
           <p className="text-sm mb-5">
             Jindal Panther 550D, JSW steel 550D, SMC 550D, SEL 500D, Tata Tiscon 550D
           </p>
