@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function LoginPage() {
+export default function SecretAdminLoginPage() {
     const [form, setForm] = useState({ email: "", password: "" });
     const [error, setError] = useState("");
     const router = useRouter();

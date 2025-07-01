@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function RegisterPage() {
+export default function SecretAdminRegisterPage() {
     const [form, setForm] = useState({ username: "", email: "", password: "" });
     const [error, setError] = useState("");
     const router = useRouter();
@@ -19,7 +19,7 @@ export default function RegisterPage() {
         }
         // For now, just log the registration data
         console.log("Registered:", form);
-        router.push("/login");
+        router.push("/admin-portal-xyz-login");
     };
 
     return (
