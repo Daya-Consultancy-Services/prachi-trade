@@ -1,20 +1,103 @@
 "use client";
+import { Home, LineChart, Package, ShoppingCart, Users, Settings } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const navItems = [
+    { label: "Dashboard", icon: Home, href: "/admin/dashboard" },
+    { label: "Orders", icon: ShoppingCart, href: "#" },
+    { label: "Products", icon: Package, href: "/admin/products" },
+    { label: "Customers", icon: Users, href: "#" },
+    { label: "Analytics", icon: LineChart, href: "#" },
+    { label: "Settings", icon: Settings, href: "#" },
+];
 
 export default function AdminDashboard() {
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <div className="bg-white p-8 rounded shadow-md w-full max-w-lg text-center">
-                <h1 className="text-3xl font-bold mb-4">Admin Dashboard</h1>
-                <p className="mb-6">
-                    Welcome, Admin! Here you can manage products and site content.
-                </p>
-                <Link
-                    href="/admin/products"
-                    className="bg-orange-600 text-white py-2 px-6 rounded font-bold"
-                >
-                    Update Products
-                </Link>
+        <div className="flex min-h-screen w-full flex-col bg-muted/40">
+            <div className="flex flex-1">
+                {/* Sidebar */}
+                <aside className="w-64 bg-white border-r flex flex-col">
+                    <div className="h-16 flex items-center justify-center border-b">
+                        <span className="text-xl font-bold">Admin Panel</span>
+                    </div>
+                    <nav className="flex-1 px-4 py-6">
+                        <ul className="space-y-2">
+                            {navItems.map((item) => (
+                                <li key={item.label}>
+                                    <Link
+                                        href={item.href}
+                                        className="flex items-center gap-3 px-3 py-2 rounded-md text-muted-foreground hover:bg-muted hover:text-primary transition-colors"
+                                    >
+                                        <item.icon className="w-5 h-5" />
+                                        <span>{item.label}</span>
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </nav>
+                </aside>
+                {/* Main Content */}
+                <main className="flex-1 p-8">
+                    {/* Header */}
+                    <div className="mb-8 flex items-center justify-between">
+                        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+                        <Button>Download</Button>
+                    </div>
+                    {/* Cards */}
+                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Total Sales</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">$12,345</div>
+                                <p className="text-xs text-muted-foreground">
+                                    +20% from last month
+                                </p>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Orders</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">1,234</div>
+                                <p className="text-xs text-muted-foreground">+5% from last month</p>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Customers</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">567</div>
+                                <p className="text-xs text-muted-foreground">+8% from last month</p>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Active Now</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">34</div>
+                                <p className="text-xs text-muted-foreground">+2 since last hour</p>
+                            </CardContent>
+                        </Card>
+                    </div>
+                    {/* Placeholder for charts or tables */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Recent Activity</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-muted-foreground">
+                                This is a placeholder for recent activity, charts, or tables.
+                            </p>
+                        </CardContent>
+                    </Card>
+                </main>
             </div>
         </div>
     );
