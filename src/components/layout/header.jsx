@@ -12,24 +12,15 @@ export default function Header() {
   return (
     <header className="relative w-full">
 
-      {/* Top Bar */}
-      <div className="relative w-full py-1.5 text-xs bg-white text-black border-b border-gray-200">
-        
-        {/* Center Email */}
-        <div className="flex justify-center relative">
-          <span>{COMPANY_INFO.email}</span>
-          <span className="absolute right-4 md:right-12">{COMPANY_INFO.location}</span>
-        </div>
-        
-      </div>
+    
 
       {/* Main Navigation */}
       <div className="relative w-full bg-[#3C372F] text-white flex items-center justify-between px-4 md:px-12 py-4">
 
         {/* Left: Logo */}
         <Link href="/" className="flex items-center">
-          <div className="w-40 md:w-50 h-10 flex items-center justify-center">
-            <img src="/logo.png" alt="Steel" className="h-40 w-40" />
+          <div className="w-100 md:w-50 h-10 flex items-center justify-center">
+            <img src="/logo.png" alt="Steel" className="h-60 w-70" />
           </div>
         </Link>
 
@@ -72,12 +63,8 @@ export default function Header() {
           </Button>
 
           {/* Vertical Contact Button */}
-          <div className="bg-orange-500 absolute -right-3 top-8 text-white text-sm px-8 py-2 rotate-90 origin-bottom-right cursor-pointer hover:bg-orange-600">
-            <Link href="/contact">
-              <span className="p-2 rotate-90"> Contact</span>
-            </Link>
-          </div>
-        </div>
+       
+</div>
 
         {/* Mobile Menu - Dropdown */}
         {mobileMenuOpen && (
