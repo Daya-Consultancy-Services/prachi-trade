@@ -1,25 +1,35 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function SecretAdminRegisterPage() {
     const [form, setForm] = useState({ username: "", email: "", password: "" });
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setError("");
+        setLoading(true);
         if (!form.username || !form.email || !form.password) {
             setError("All fields are required.");
+            setLoading(false);
             return;
         }
-        // For now, just log the registration data
-        console.log("Registered:", form);
-        router.push("/admin-portal-xyz-login");
+        try {
+            await axios.post("/api/admin/register", form);
+            router.push("/admin-portal-xyz-login");
+        } catch (err) {
+            setError(err.response?.data?.error || "Registration failed");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -57,8 +67,9 @@ export default function SecretAdminRegisterPage() {
                 <button
                     type="submit"
                     className="w-full bg-orange-600 text-white py-2 rounded font-bold"
+                    disabled={loading}
                 >
-                    Register
+                    {loading ? "Registering..." : "Register"}
                 </button>
             </form>
         </div>

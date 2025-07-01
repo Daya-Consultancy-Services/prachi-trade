@@ -1,25 +1,39 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { toast } from "sonner";
 
 export default function SecretAdminLoginPage() {
     const [form, setForm] = useState({ email: "", password: "" });
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setError("");
+        setLoading(true);
         if (!form.email || !form.password) {
             setError("Both fields are required.");
+            setLoading(false);
             return;
         }
-        // For now, just log the login data
-        console.log("Login:", form);
-        router.push("/admin/dashboard");
+        try {
+            const res = await axios.post("/api/admin/login", form);
+            localStorage.setItem("token", res.data.token);
+            toast.success("Login successful", { duration: 4000, position: "top-right" });
+            router.push("/admin/dashboard");
+        } catch (err) {
+            setError(err.response?.data?.error || "Login failed");
+            toast.error("Login failed", { duration: 4000, position: "top-right" });
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -49,8 +63,9 @@ export default function SecretAdminLoginPage() {
                 <button
                     type="submit"
                     className="w-full bg-orange-600 text-white py-2 rounded font-bold"
+                    disabled={loading}
                 >
-                    Login
+                    {loading ? "Logging in..." : "Login"}
                 </button>
             </form>
         </div>
