@@ -39,7 +39,7 @@ export default function buildingmaterial() {
                             550D
                         </p>
                         <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold">
-                            <Link href="material" className="block px-4 py-2">
+                            <Link href="/material/msrod" className="block px-4 py-2">
                                 VIEW PRODUCTS
                             </Link>
                         </button>
@@ -60,7 +60,7 @@ export default function buildingmaterial() {
                         </p>
 
                         <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold">
-                            <Link href="material" className="block px-4 py-2">
+                            <Link href="/material/cement" className="block px-4 py-2">
                                 VIEW PRODUCTS
                             </Link>
                         </button>
