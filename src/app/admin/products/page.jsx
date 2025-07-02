@@ -6,7 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
-import { Home, LineChart, Package, ShoppingCart, Users, Settings } from "lucide-react";
+import {
+    Home,
+    LineChart,
+    Package,
+    ShoppingCart,
+    Users,
+    Settings,
+    MessageCircle,
+} from "lucide-react";
 import Link from "next/link";
 import { AdminSidebar, AppSidebar } from "@/components/app-sidebar";
 
@@ -15,9 +23,8 @@ const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
 const navItems = [
     { label: "Dashboard", icon: Home, href: "/admin/dashboard" },
-    { label: "Orders", icon: ShoppingCart, href: "#" },
     { label: "Products", icon: Package, href: "/admin/products" },
-    { label: "Customers", icon: Users, href: "#" },
+    { label: "Enquiries", icon: MessageCircle, href: "/admin/enquiries" },
     { label: "Analytics", icon: LineChart, href: "#" },
     { label: "Settings", icon: Settings, href: "#" },
 ];

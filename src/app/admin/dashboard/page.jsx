@@ -1,5 +1,13 @@
 "use client";
-import { Home, LineChart, Package, ShoppingCart, Users, Settings } from "lucide-react";
+import {
+    Home,
+    LineChart,
+    Package,
+    MessageCircle,
+    ShoppingCart,
+    Users,
+    Settings,
+} from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,9 +18,8 @@ import { AdminSidebar, AppSidebar } from "@/components/app-sidebar";
 
 const navItems = [
     { label: "Dashboard", icon: Home, href: "/admin/dashboard" },
-    { label: "Orders", icon: ShoppingCart, href: "#" },
     { label: "Products", icon: Package, href: "/admin/products" },
-    { label: "Customers", icon: Users, href: "#" },
+    { label: "Enquiries", icon: MessageCircle, href: "/admin/enquiries" },
     { label: "Analytics", icon: LineChart, href: "#" },
     { label: "Settings", icon: Settings, href: "#" },
 ];
