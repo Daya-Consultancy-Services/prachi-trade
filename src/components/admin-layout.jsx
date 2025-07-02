@@ -23,8 +23,10 @@ const AdminLayout = ({ children }) => {
                 enquiries={enquiries}
             />
             <div className="flex-1 flex flex-col">
-                <Header user={user} setSidebarOpen={setSidebarOpen} />
-                <main className="flex-1 p-6">{children}</main>
+                <div className="max-w-6xl mx-auto w-full">
+                    <Header user={user} setSidebarOpen={setSidebarOpen} />
+                    <main className="flex-1">{children}</main>
+                </div>
             </div>
         </div>
     );

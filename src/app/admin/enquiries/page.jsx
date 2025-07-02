@@ -2,6 +2,8 @@
 
 import AdminLayout from "@/components/admin-layout";
 import { useEffect, useState } from "react";
+import { MessageSquare } from "lucide-react";
+import SummaryCard from "@/components/SummaryCard";
 
 const EnquiriesContent = () => {
     const [enquiries, setEnquiries] = useState([]);
@@ -14,6 +16,15 @@ const EnquiriesContent = () => {
 
     return (
         <div className="space-y-6">
+            <div className="flex flex-wrap gap-6 mb-8">
+                <SummaryCard
+                    icon={MessageSquare}
+                    value={enquiries.length}
+                    label="Total Enquiries"
+                    iconBg="bg-green-100"
+                    iconColor="text-green-600"
+                />
+            </div>
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                 <div className="px-6 py-4 border-b border-gray-200">
                     <h3 className="text-lg font-medium text-gray-900">Customer Enquiries</h3>

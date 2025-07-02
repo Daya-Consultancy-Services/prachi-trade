@@ -1,8 +1,9 @@
 "use client";
 
-import { Edit, Eye, Plus, Search, Trash2 } from "lucide-react";
+import { Edit, Eye, Plus, Search, Trash2, Package } from "lucide-react";
 import { useEffect, useState } from "react";
 import AdminLayout from "@/components/admin-layout";
+import SummaryCard from "@/components/SummaryCard";
 
 const ProductsContent = () => {
     const [products, setProducts] = useState([]);
@@ -15,6 +16,15 @@ const ProductsContent = () => {
 
     return (
         <div className="space-y-6">
+            <div className="flex flex-wrap gap-6 mb-8">
+                <SummaryCard
+                    icon={Package}
+                    value={products.length}
+                    label="Total Products"
+                    iconBg="bg-purple-100"
+                    iconColor="text-purple-600"
+                />
+            </div>
             <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-4">
                     <div className="relative">

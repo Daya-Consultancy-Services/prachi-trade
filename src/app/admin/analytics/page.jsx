@@ -2,6 +2,8 @@
 
 import AdminLayout from "@/components/admin-layout";
 import { useState } from "react";
+import { Users, MessageSquare, Package } from "lucide-react";
+import SummaryCard from "@/components/SummaryCard";
 
 const AnalyticsContent = () => {
     const [enquiries, setEnquiries] = useState([]);
@@ -22,6 +24,29 @@ const AnalyticsContent = () => {
 
     return (
         <div className="space-y-6">
+            <div className="flex flex-wrap gap-6 mb-8">
+                <SummaryCard
+                    icon={Users}
+                    value={analytics.totalVisitors}
+                    label="Total Visitors"
+                    iconBg="bg-blue-100"
+                    iconColor="text-blue-600"
+                />
+                <SummaryCard
+                    icon={MessageSquare}
+                    value={analytics.totalEnquiries}
+                    label="Total Enquiries"
+                    iconBg="bg-green-100"
+                    iconColor="text-green-600"
+                />
+                <SummaryCard
+                    icon={Package}
+                    value={analytics.totalProducts}
+                    label="Total Products"
+                    iconBg="bg-purple-100"
+                    iconColor="text-purple-600"
+                />
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                     <h3 className="text-lg font-medium text-gray-900 mb-4">Monthly Visitors</h3>
