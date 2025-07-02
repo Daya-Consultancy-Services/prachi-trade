@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import {
     Package,
@@ -28,9 +30,6 @@ const AdminDashboard = () => {
         fetch("/api/products")
             .then((r) => r.json())
             .then(setProducts);
-        fetch("/api/enquiries")
-            .then((r) => r.json())
-            .then(setEnquiries);
     }, []);
 
     // Analytics data
@@ -102,116 +101,8 @@ const AdminDashboard = () => {
         </div>
     );
 
-    const EnquiriesContent = () => (
-        <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-lg font-medium text-gray-900">Customer Enquiries</h3>
-                </div>
-                <div className="divide-y divide-gray-200">
-                    {enquiries.map((enquiry) => (
-                        <div
-                            key={enquiry._id || enquiry.id}
-                            className={`p-6 ${
-                                enquiry.status === "unread" ? "bg-blue-50" : "bg-white"
-                            }`}
-                        >
-                            <div className="flex items-start justify-between">
-                                <div className="flex-1">
-                                    <div className="flex items-center space-x-2">
-                                        <h4 className="text-sm font-medium text-gray-900">
-                                            {enquiry.name}
-                                        </h4>
-                                        <span className="text-sm text-gray-500">
-                                            {enquiry.email}
-                                        </span>
-                                        {enquiry.status === "unread" && (
-                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                                New
-                                            </span>
-                                        )}
-                                    </div>
-                                    <p className="mt-2 text-sm text-gray-600">{enquiry.message}</p>
-                                </div>
-                                <span className="text-xs text-gray-400">
-                                    {enquiry.createdAt
-                                        ? new Date(enquiry.createdAt).toLocaleDateString()
-                                        : ""}
-                                </span>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </div>
-    );
-
-    const AnalyticsContent = () => (
-        <div className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                    <h3 className="text-lg font-medium text-gray-900 mb-4">Monthly Visitors</h3>
-                    <div className="space-y-3">
-                        {analytics.monthlyVisitors.map((item) => (
-                            <div key={item.month} className="flex items-center justify-between">
-                                <span className="text-sm text-gray-600">{item.month}</span>
-                                <div className="flex items-center space-x-2">
-                                    <div className="w-32 bg-gray-200 rounded-full h-2">
-                                        <div
-                                            className="bg-blue-600 h-2 rounded-full"
-                                            style={{ width: `${(item.visitors / 600) * 100}%` }}
-                                        ></div>
-                                    </div>
-                                    <span className="text-sm font-medium text-gray-900 w-12 text-right">
-                                        {item.visitors}
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                    <h3 className="text-lg font-medium text-gray-900 mb-4">Recent Activity</h3>
-                    <div className="space-y-3">
-                        <div className="flex items-center space-x-3">
-                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                            <span className="text-sm text-gray-600">New enquiry from John Doe</span>
-                        </div>
-                        <div className="flex items-center space-x-3">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                            <span className="text-sm text-gray-600">
-                                Product added: TMT Steel Bars
-                            </span>
-                        </div>
-                        <div className="flex items-center space-x-3">
-                            <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                            <span className="text-sm text-gray-600">
-                                Price updated for Portland Cement
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-
-    const renderContent = () => {
-        switch (activeTab) {
-            case "dashboard":
-                return <DashboardContent />;
-            case "products":
-                return <ProductsContent />;
-            case "enquiries":
-                return <EnquiriesContent />;
-            case "analytics":
-                return <AnalyticsContent />;
-            default:
-                return <DashboardContent />;
-        }
-    };
-
     return (
-        <div className="flex h-screen bg-gray-100">
+        <div className="flex h-screen bg-gray-800">
             <Sidebar
                 sidebarOpen={sidebarOpen}
                 setSidebarOpen={setSidebarOpen}
@@ -228,7 +119,7 @@ const AdminDashboard = () => {
             <div className="flex-1 flex flex-col overflow-hidden">
                 <Header activeTab={activeTab} user={user} setSidebarOpen={setSidebarOpen} />
                 <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6 lg:ml-64">
-                    {renderContent()}
+                    {/* {renderContent()} */}
                 </main>
             </div>
         </div>

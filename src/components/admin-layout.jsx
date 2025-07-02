@@ -1,9 +1,10 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import Sidebar from "./dashboard/Sidebar";
 import Header from "./dashboard/Header";
 
-const AdminLayout = ({ children, initialTab = "dashboard" }) => {
-    const [activeTab, setActiveTab] = useState(initialTab);
+const AdminLayout = ({ children }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [enquiries, setEnquiries] = useState([]);
     const [user, setUser] = useState({ name: "Admin User", email: "admin@buildingmaterials.com" });
@@ -19,12 +20,10 @@ const AdminLayout = ({ children, initialTab = "dashboard" }) => {
             <Sidebar
                 sidebarOpen={sidebarOpen}
                 setSidebarOpen={setSidebarOpen}
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
                 enquiries={enquiries}
             />
             <div className="flex-1 flex flex-col">
-                <Header activeTab={activeTab} user={user} setSidebarOpen={setSidebarOpen} />
+                <Header user={user} setSidebarOpen={setSidebarOpen} />
                 <main className="flex-1 p-6">{children}</main>
             </div>
         </div>

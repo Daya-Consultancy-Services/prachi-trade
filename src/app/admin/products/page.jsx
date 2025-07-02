@@ -107,7 +107,7 @@ const ProductsContent = () => {
 };
 
 const ProductsPage = () => (
-    <AdminLayout initialTab="products">
+    <AdminLayout>
         <ProductsContent />
     </AdminLayout>
 );

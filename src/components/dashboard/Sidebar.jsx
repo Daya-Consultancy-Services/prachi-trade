@@ -1,7 +1,12 @@
+"use client";
+
 import { BarChart3, Package, MessageSquare, Users, LogOut, X } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-const Sidebar = ({ sidebarOpen, setSidebarOpen, activeTab, setActiveTab, enquiries }) => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen, enquiries }) => {
+    const pathname = usePathname();
+
     const handleLogout = () => {
         localStorage.removeItem("token");
         window.location.href = "/admin-portal-xyz-login";
@@ -15,11 +20,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activeTab, setActiveTab, enquiri
         >
             <div className="flex items-center justify-between p-4 border-b border-gray-700">
                 <h2 className="text-xl font-bold text-white">Admin Panel</h2>
-                <Link
-                    href="/admin/dashboard"
-                    // onClick={() => setSidebarOpen(false)}
-                    className="lg:hidden text-gray-400 hover:text-white"
-                >
+                <Link href="/admin/dashboard" className="lg:hidden text-gray-400 hover:text-white">
                     <X size={24} />
                 </Link>
             </div>
@@ -28,7 +29,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activeTab, setActiveTab, enquiri
                     <Link
                         href="/admin/dashboard"
                         className={`w-full flex items-center px-4 py-2 text-left rounded-lg transition-colors ${
-                            activeTab === "dashboard"
+                            pathname === "/admin/dashboard"
                                 ? "bg-blue-600 text-white"
                                 : "text-gray-300 hover:bg-gray-700"
                         }`}
@@ -39,7 +40,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activeTab, setActiveTab, enquiri
                     <Link
                         href="/admin/products"
                         className={`w-full flex items-center px-4 py-2 text-left rounded-lg transition-colors ${
-                            activeTab === "products"
+                            pathname === "/admin/products"
                                 ? "bg-blue-600 text-white"
                                 : "text-gray-300 hover:bg-gray-700"
                         }`}
@@ -47,10 +48,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activeTab, setActiveTab, enquiri
                         <Package className="mr-3" size={20} />
                         Products
                     </Link>
-                    <button
-                        onClick={() => setActiveTab("enquiries")}
+                    <Link
+                        href="/admin/enquiries"
                         className={`w-full flex items-center px-4 py-2 text-left rounded-lg transition-colors ${
-                            activeTab === "enquiries"
+                            pathname === "/admin/enquiries"
                                 ? "bg-blue-600 text-white"
                                 : "text-gray-300 hover:bg-gray-700"
                         }`}
@@ -62,18 +63,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, activeTab, setActiveTab, enquiri
                                 {enquiries.filter((e) => e.status === "unread").length}
                             </span>
                         )}
-                    </button>
-                    <button
-                        onClick={() => setActiveTab("analytics")}
+                    </Link>
+                    <Link
+                        href="/admin/analytics"
                         className={`w-full flex items-center px-4 py-2 text-left rounded-lg transition-colors ${
-                            activeTab === "analytics"
+                            pathname === "/admin/analytics"
                                 ? "bg-blue-600 text-white"
                                 : "text-gray-300 hover:bg-gray-700"
                         }`}
                     >
                         <Users className="mr-3" size={20} />
                         Analytics
-                    </button>
+                    </Link>
                 </div>
                 <div className="absolute bottom-4 left-4 right-4">
                     <button
