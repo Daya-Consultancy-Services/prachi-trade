@@ -71,9 +71,11 @@ const AnalyticsContent = () => {
 };
 
 const AnalyticsPage = () => {
-    <AdminLayout>
-        <AnalyticsContent />
-    </AdminLayout>;
+    return (
+        <AdminLayout>
+            <AnalyticsContent />
+        </AdminLayout>
+    );
 };
 
 export default AnalyticsPage;
