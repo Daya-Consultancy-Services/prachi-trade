@@ -6,9 +6,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
+import { Home, LineChart, Package, ShoppingCart, Users, Settings } from "lucide-react";
+import Link from "next/link";
+import { AdminSidebar, AppSidebar } from "@/components/app-sidebar";
 
 const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+
+const navItems = [
+    { label: "Dashboard", icon: Home, href: "/admin/dashboard" },
+    { label: "Orders", icon: ShoppingCart, href: "#" },
+    { label: "Products", icon: Package, href: "/admin/products" },
+    { label: "Customers", icon: Users, href: "#" },
+    { label: "Analytics", icon: LineChart, href: "#" },
+    { label: "Settings", icon: Settings, href: "#" },
+];
 
 export default function AdminProductsPage() {
     const router = useRouter();
@@ -122,178 +134,189 @@ export default function AdminProductsPage() {
     };
 
     return (
-        <div className="p-8 space-y-8">
-            {/* Category Form */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Add Category</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleAddCategory} className="flex gap-4 items-end">
-                        <div>
-                            <Label>Category Name</Label>
-                            <Input
-                                value={catName}
-                                onChange={(e) => setCatName(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <Button type="submit" disabled={loading}>
-                            Add
-                        </Button>
-                    </form>
-                </CardContent>
-            </Card>
-            {/* Subcategory Form */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Add Subcategory</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleAddSubcategory} className="flex gap-4 items-end">
-                        <div>
-                            <Label>Subcategory Name</Label>
-                            <Input
-                                value={subcatName}
-                                onChange={(e) => setSubcatName(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div>
-                            <Label>Parent Category</Label>
-                            <select
-                                value={subcatCat}
-                                onChange={(e) => setSubcatCat(e.target.value)}
-                                required
-                                className="border rounded px-2 py-1"
+        <div className="flex min-h-screen w-full flex-col bg-muted/40">
+            <div className="flex flex-1">
+                {/* Sidebar */}
+                {/* <AdminSidebar navItems={navItems} /> */}
+                <AppSidebar />
+                {/* Main Content */}
+                <main className="flex-1 p-8 space-y-8">
+                    {/* Category Form */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Add Category</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <form onSubmit={handleAddCategory} className="flex gap-4 items-end">
+                                <div>
+                                    <Label>Category Name</Label>
+                                    <Input
+                                        value={catName}
+                                        onChange={(e) => setCatName(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <Button type="submit" disabled={loading}>
+                                    Add
+                                </Button>
+                            </form>
+                        </CardContent>
+                    </Card>
+                    {/* Subcategory Form */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Add Subcategory</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <form onSubmit={handleAddSubcategory} className="flex gap-4 items-end">
+                                <div>
+                                    <Label>Subcategory Name</Label>
+                                    <Input
+                                        value={subcatName}
+                                        onChange={(e) => setSubcatName(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <Label>Parent Category</Label>
+                                    <select
+                                        value={subcatCat}
+                                        onChange={(e) => setSubcatCat(e.target.value)}
+                                        required
+                                        className="border rounded px-2 py-1"
+                                    >
+                                        <option value="">Select Category</option>
+                                        {categories.map((cat) => (
+                                            <option key={cat._id} value={cat._id}>
+                                                {cat.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <Button type="submit" disabled={loading}>
+                                    Add
+                                </Button>
+                            </form>
+                        </CardContent>
+                    </Card>
+                    {/* Product Form */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Add Product</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <form
+                                onSubmit={handleAddProduct}
+                                className="grid grid-cols-1 md:grid-cols-2 gap-4"
                             >
-                                <option value="">Select Category</option>
-                                {categories.map((cat) => (
-                                    <option key={cat._id} value={cat._id}>
-                                        {cat.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <Button type="submit" disabled={loading}>
-                            Add
-                        </Button>
-                    </form>
-                </CardContent>
-            </Card>
-            {/* Product Form */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Add Product</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <form
-                        onSubmit={handleAddProduct}
-                        className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                    >
-                        <div>
-                            <Label>Product Name</Label>
-                            <Input
-                                value={prodName}
-                                onChange={(e) => setProdName(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div>
-                            <Label>Brand</Label>
-                            <Input
-                                value={prodBrand}
-                                onChange={(e) => setProdBrand(e.target.value)}
-                            />
-                        </div>
-                        <div className="md:col-span-2">
-                            <Label>Description</Label>
-                            <Input value={prodDesc} onChange={(e) => setProdDesc(e.target.value)} />
-                        </div>
-                        <div>
-                            <Label>Subcategory</Label>
-                            <select
-                                value={prodSubcat}
-                                onChange={(e) => setProdSubcat(e.target.value)}
-                                required
-                                className="border rounded px-2 py-1"
-                            >
-                                <option value="">Select Subcategory</option>
-                                {subcategories.map((sub) => (
-                                    <option key={sub._id} value={sub._id}>
-                                        {sub.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div>
-                            <Label>Product Image</Label>
-                            <Input
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => setProdImage(e.target.files[0])}
-                            />
-                            {prodImageUrl && (
-                                <img
-                                    src={prodImageUrl}
-                                    alt="Preview"
-                                    className="mt-2 w-24 h-24 object-cover rounded"
-                                />
-                            )}
-                        </div>
-                        <Button type="submit" className="md:col-span-2" disabled={loading}>
-                            Add Product
-                        </Button>
-                    </form>
-                </CardContent>
-            </Card>
-            {/* Lists */}
-            <div className="grid md:grid-cols-3 gap-8">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Categories</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ul className="space-y-1">
-                            {categories.map((cat) => (
-                                <li key={cat._id}>{cat.name}</li>
-                            ))}
-                        </ul>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Subcategories</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ul className="space-y-1">
-                            {subcategories.map((sub) => (
-                                <li key={sub._id}>{sub.name}</li>
-                            ))}
-                        </ul>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Products</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ul className="space-y-1">
-                            {products.map((prod) => (
-                                <li key={prod._id} className="flex items-center gap-2">
-                                    {prod.image && (
+                                <div>
+                                    <Label>Product Name</Label>
+                                    <Input
+                                        value={prodName}
+                                        onChange={(e) => setProdName(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <Label>Brand</Label>
+                                    <Input
+                                        value={prodBrand}
+                                        onChange={(e) => setProdBrand(e.target.value)}
+                                    />
+                                </div>
+                                <div className="md:col-span-2">
+                                    <Label>Description</Label>
+                                    <Input
+                                        value={prodDesc}
+                                        onChange={(e) => setProdDesc(e.target.value)}
+                                    />
+                                </div>
+                                <div>
+                                    <Label>Subcategory</Label>
+                                    <select
+                                        value={prodSubcat}
+                                        onChange={(e) => setProdSubcat(e.target.value)}
+                                        required
+                                        className="border rounded px-2 py-1"
+                                    >
+                                        <option value="">Select Subcategory</option>
+                                        {subcategories.map((sub) => (
+                                            <option key={sub._id} value={sub._id}>
+                                                {sub.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <Label>Product Image</Label>
+                                    <Input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => setProdImage(e.target.files[0])}
+                                    />
+                                    {prodImageUrl && (
                                         <img
-                                            src={prod.image}
-                                            alt={prod.name}
-                                            className="w-8 h-8 object-cover rounded"
+                                            src={prodImageUrl}
+                                            alt="Preview"
+                                            className="mt-2 w-24 h-24 object-cover rounded"
                                         />
                                     )}
-                                    <span>{prod.name}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </CardContent>
-                </Card>
+                                </div>
+                                <Button type="submit" className="md:col-span-2" disabled={loading}>
+                                    Add Product
+                                </Button>
+                            </form>
+                        </CardContent>
+                    </Card>
+                    {/* Lists */}
+                    <div className="grid md:grid-cols-3 gap-8">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Categories</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <ul className="space-y-1">
+                                    {categories.map((cat) => (
+                                        <li key={cat._id}>{cat.name}</li>
+                                    ))}
+                                </ul>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Subcategories</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <ul className="space-y-1">
+                                    {subcategories.map((sub) => (
+                                        <li key={sub._id}>{sub.name}</li>
+                                    ))}
+                                </ul>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Products</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <ul className="space-y-1">
+                                    {products.map((prod) => (
+                                        <li key={prod._id} className="flex items-center gap-2">
+                                            {prod.image && (
+                                                <img
+                                                    src={prod.image}
+                                                    alt={prod.name}
+                                                    className="w-8 h-8 object-cover rounded"
+                                                />
+                                            )}
+                                            <span>{prod.name}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </main>
             </div>
         </div>
     );

@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { AdminSidebar, AppSidebar } from "@/components/app-sidebar";
 
 const navItems = [
     { label: "Dashboard", icon: Home, href: "/admin/dashboard" },
@@ -40,26 +41,8 @@ export default function AdminDashboard() {
         <div className="flex min-h-screen w-full flex-col bg-muted/40">
             <div className="flex flex-1">
                 {/* Sidebar */}
-                <aside className="w-64 bg-white border-r flex flex-col">
-                    <div className="h-16 flex items-center justify-center border-b">
-                        <span className="text-xl font-bold">Admin Panel</span>
-                    </div>
-                    <nav className="flex-1 px-4 py-6">
-                        <ul className="space-y-2">
-                            {navItems.map((item) => (
-                                <li key={item.label}>
-                                    <Link
-                                        href={item.href}
-                                        className="flex items-center gap-3 px-3 py-2 rounded-md text-muted-foreground hover:bg-muted hover:text-primary transition-colors"
-                                    >
-                                        <item.icon className="w-5 h-5" />
-                                        <span>{item.label}</span>
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </nav>
-                </aside>
+                {/* <AdminSidebar navItems={navItems} /> */}
+                <AppSidebar />
                 {/* Main Content */}
                 <main className="flex-1 p-8">
                     {/* Header */}
