@@ -45,13 +45,13 @@ export default function AdminDashboard() {
     };
 
     return (
-        <div className="flex min-h-screen w-full flex-col bg-muted/40">
+        <div className="flex min-h-screen w-full flex-col bg-white">
             <div className="flex flex-1">
                 {/* Sidebar */}
                 {/* <AdminSidebar navItems={navItems} /> */}
                 <AppSidebar />
                 {/* Main Content */}
-                <main className="flex-1 p-8">
+                <main className="flex-1 container mx-auto px-4 py-8 text-gray-500">
                     {/* Header */}
                     <div className="mb-8 flex items-center justify-between">
                         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
@@ -59,7 +59,6 @@ export default function AdminDashboard() {
                             <Button onClick={handleLogout} variant="outline">
                                 Logout
                             </Button>
-                            <Button>Download</Button>
                         </div>
                     </div>
                     {/* Cards */}

@@ -141,13 +141,13 @@ export default function AdminProductsPage() {
     };
 
     return (
-        <div className="flex min-h-screen w-full flex-col bg-muted/40">
+        <div className="flex min-h-screen w-full flex-col bg-white">
             <div className="flex flex-1">
                 {/* Sidebar */}
                 {/* <AdminSidebar navItems={navItems} /> */}
                 <AppSidebar />
                 {/* Main Content */}
-                <main className="flex-1 p-8 space-y-8">
+                <main className="flex-1 container mx-auto px-4 py-8 space-y-8 text-gray-500">
                     {/* Category Form */}
                     <Card>
                         <CardHeader>

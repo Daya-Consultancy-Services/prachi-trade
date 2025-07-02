@@ -19,9 +19,9 @@ const mockEnquiries = [
 
 export default function AdminEnquiriesPage() {
     return (
-        <div className="flex min-h-screen w-full bg-muted/40">
+        <div className="flex min-h-screen w-full bg-white">
             <AppSidebar />
-            <main className="flex-1 p-8">
+            <main className="flex-1 container mx-auto px-4 py-8 text-gray-500">
                 <h1 className="text-3xl font-bold mb-8">Product Enquiries</h1>
                 <div className="space-y-6">
                     {mockEnquiries.map((enquiry, idx) => (
