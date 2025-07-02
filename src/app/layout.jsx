@@ -1,7 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import ClientProviders from "@/components/ClientProviders";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,10 +14,9 @@ export default function RootLayout({ children }) {
     return (
         <html lang="en" suppressHydrationWarning>
             <body className={inter.className}>
-                <main>
-                    <SidebarProvider>{children}</SidebarProvider>
-                </main>
-                <Toaster />
+                <ClientProviders>
+                    <main>{children}</main>
+                </ClientProviders>
             </body>
         </html>
     );
