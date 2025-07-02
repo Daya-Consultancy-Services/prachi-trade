@@ -21,7 +21,7 @@ export default function HomePage() {
       <div className="fixed right-[20px] bottom-8 z-50">
         <Link href="/contact">
           <div className="bg-orange-500 hover:bg-orange-600 text-white p-4 rounded-full shadow-lg cursor-pointer">
-            <Phone className="w-6 h-6" />
+            <Phone className="w-4 h-4" />
           </div>
         </Link>
       </div>
