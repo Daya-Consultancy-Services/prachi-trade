@@ -16,17 +16,20 @@ const AdminLayout = ({ children }) => {
     }, []);
 
     return (
-        <div className="min-h-screen flex bg-gray-100">
+        // In AdminLayout.jsx, modify the main container structure:
+        <div className="min-h-screen flex bg-gray-100 overflow-x-hidden">
+            {/* Add overflow-x-hidden */}
             <Sidebar
                 sidebarOpen={sidebarOpen}
                 setSidebarOpen={setSidebarOpen}
                 enquiries={enquiries}
             />
-            <div className="flex-1 flex flex-col">
-                <div className="max-w-6xl mx-auto w-full">
-                    <Header user={user} setSidebarOpen={setSidebarOpen} />
-                    <main className="flex-1">{children}</main>
-                </div>
+            <div className="flex-1 flex flex-col overflow-hidden">
+                {" "}
+                {/* Add overflow-hidden */}
+                <Header user={user} setSidebarOpen={setSidebarOpen} />
+                <main className="flex-1 overflow-auto p-4">{children}</main>{" "}
+                {/* Add overflow-auto and padding */}
             </div>
         </div>
     );
