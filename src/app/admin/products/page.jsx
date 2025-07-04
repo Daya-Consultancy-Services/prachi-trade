@@ -247,16 +247,14 @@ const PrachiTrade = () => {
             sum + cat.subcategories.reduce((subSum, sub) => subSum + sub.products.length, 0),
         0
     );
-    const totalStock = categories.reduce(
-        (sum, cat) =>
-            sum +
-            cat.subcategories.reduce(
-                (subSum, sub) =>
-                    subSum + sub.products.reduce((prodSum, prod) => prodSum + prod.stock, 0),
-                0
-            ),
-        0
-    );
+
+    const totalStock = categories.reduce((sum, cat) => {
+        const catSum = (cat.subcategories || []).reduce((subSum, sub) => {
+            return subSum + sub?.products.length;
+        }, 0);
+
+        return sum + catSum;
+    }, 0);
 
     if (loading) return <div className="p-8 text-center">Loading...</div>;
     if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
