@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,89 +25,16 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Edit2, Trash2, Package, Building, Palette, ShoppingCart } from "lucide-react";
 import AdminLayout from "@/components/admin-layout";
+import axios from "axios";
+
+// Add Cloudinary config (user must fill in their own values)
+const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
 const PrachiTrade = () => {
-    // Initial data structure
-    const [categories, setCategories] = useState([
-        {
-            id: 1,
-            name: "Building Materials",
-            description: "Essential materials for construction",
-            icon: "Building",
-            subcategories: [
-                {
-                    id: 1,
-                    name: "Cement",
-                    description: "Various types of cement",
-                    products: [
-                        {
-                            id: 1,
-                            name: "UltraTech Cement",
-                            brand: "UltraTech",
-                            price: 350,
-                            unit: "bag",
-                            stock: 100,
-                        },
-                        {
-                            id: 2,
-                            name: "Ambuja Cement",
-                            brand: "Ambuja",
-                            price: 340,
-                            unit: "bag",
-                            stock: 150,
-                        },
-                    ],
-                },
-                {
-                    id: 2,
-                    name: "Steel Rod",
-                    description: "TMT bars and steel rods",
-                    products: [
-                        {
-                            id: 3,
-                            name: "Jindal Steel TMT",
-                            brand: "Jindal Steel",
-                            price: 65,
-                            unit: "kg",
-                            stock: 500,
-                        },
-                        {
-                            id: 4,
-                            name: "JSW Steel TMT",
-                            brand: "JSW Steel",
-                            price: 67,
-                            unit: "kg",
-                            stock: 300,
-                        },
-                    ],
-                },
-            ],
-        },
-        {
-            id: 2,
-            name: "Paints",
-            description: "Interior and exterior paints",
-            icon: "Palette",
-            subcategories: [
-                {
-                    id: 3,
-                    name: "Interior Paint",
-                    description: "Paints for indoor use",
-                    products: [
-                        {
-                            id: 5,
-                            name: "Asian Paints Royale",
-                            brand: "Asian Paints",
-                            price: 450,
-                            unit: "liter",
-                            stock: 80,
-                        },
-                    ],
-                },
-            ],
-        },
-    ]);
-
+    const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [activeTab, setActiveTab] = useState("overview");
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [selectedSubcategory, setSelectedSubcategory] = useState(null);
@@ -128,7 +55,39 @@ const PrachiTrade = () => {
         stock: "",
         categoryId: "",
         subcategoryId: "",
+        image: "",
     });
+    const [imageUploading, setImageUploading] = useState(false);
+    const [imageError, setImageError] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const catRes = await axios.get("/api/categories");
+                // Each category has populated subcategories, but subcategories may not have products populated
+                // So fetch subcategories with products
+                const subRes = await axios.get("/api/subcategories");
+                // Map subcategories by id for quick lookup
+                const subMap = {};
+                subRes.data.forEach((sub) => {
+                    subMap[sub._id] = sub;
+                });
+                // Attach products to subcategories in categories
+                const categoriesWithSubsAndProducts = catRes.data.map((cat) => ({
+                    ...cat,
+                    subcategories: cat.subcategories.map((sub) => subMap[sub._id] || sub),
+                }));
+                setCategories(categoriesWithSubsAndProducts);
+            } catch (err) {
+                setError("Failed to load data");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
 
     // Helper function to get icon component
     const getIcon = (iconName) => {
@@ -143,87 +102,135 @@ const PrachiTrade = () => {
     };
 
     // Add category
-    const addCategory = () => {
+    const addCategory = async () => {
         if (categoryForm.name.trim()) {
-            const newCategory = {
-                id: Date.now(),
-                name: categoryForm.name,
-                description: categoryForm.description,
-                icon: "Package",
-                subcategories: [],
-            };
-            setCategories([...categories, newCategory]);
-            setCategoryForm({ name: "", description: "" });
-            setOpenDialog(null);
+            try {
+                const res = await axios.post("/api/categories", { name: categoryForm.name });
+                // Refetch categories
+                const catRes = await axios.get("/api/categories");
+                const subRes = await axios.get("/api/subcategories");
+                const subMap = {};
+                subRes.data.forEach((sub) => {
+                    subMap[sub._id] = sub;
+                });
+                const categoriesWithSubsAndProducts = catRes.data.map((cat) => ({
+                    ...cat,
+                    subcategories: cat.subcategories.map((sub) => subMap[sub._id] || sub),
+                }));
+                setCategories(categoriesWithSubsAndProducts);
+                setCategoryForm({ name: "", description: "" });
+                setOpenDialog(null);
+            } catch (err) {
+                setError("Failed to add category");
+            }
         }
     };
 
     // Add subcategory
-    const addSubcategory = () => {
+    const addSubcategory = async () => {
         if (subcategoryForm.name.trim() && subcategoryForm.categoryId) {
-            const newSubcategory = {
-                id: Date.now(),
-                name: subcategoryForm.name,
-                description: subcategoryForm.description,
-                products: [],
-            };
+            try {
+                const res = await axios.post("/api/subcategories", {
+                    name: subcategoryForm.name,
+                    categoryId: subcategoryForm.categoryId,
+                });
+                // Refetch categories and subcategories
+                const catRes = await axios.get("/api/categories");
+                const subRes = await axios.get("/api/subcategories");
+                const subMap = {};
+                subRes.data.forEach((sub) => {
+                    subMap[sub._id] = sub;
+                });
+                const categoriesWithSubsAndProducts = catRes.data.map((cat) => ({
+                    ...cat,
+                    subcategories: cat.subcategories.map((sub) => subMap[sub._id] || sub),
+                }));
+                setCategories(categoriesWithSubsAndProducts);
+                setSubcategoryForm({ name: "", description: "", categoryId: "" });
+                setOpenDialog(null);
+            } catch (err) {
+                setError("Failed to add subcategory");
+            }
+        }
+    };
 
-            setCategories(
-                categories.map((cat) =>
-                    cat.id === parseInt(subcategoryForm.categoryId)
-                        ? { ...cat, subcategories: [...cat.subcategories, newSubcategory] }
-                        : cat
-                )
+    // Add this function to handle image upload to Cloudinary
+    const handleImageUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        setImageUploading(true);
+        setImageError(null);
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+        try {
+            const res = await fetch(
+                `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
+                {
+                    method: "POST",
+                    body: formData,
+                }
             );
-
-            setSubcategoryForm({ name: "", description: "", categoryId: "" });
-            setOpenDialog(null);
+            const data = await res.json();
+            if (data.secure_url) {
+                setProductForm((prev) => ({ ...prev, image: data.secure_url }));
+            } else {
+                setImageError("Failed to upload image");
+            }
+        } catch (err) {
+            setImageError("Failed to upload image");
+        } finally {
+            setImageUploading(false);
         }
     };
 
     // Add product
-    const addProduct = () => {
+    const addProduct = async () => {
         if (productForm.name.trim() && productForm.categoryId && productForm.subcategoryId) {
-            const newProduct = {
-                id: Date.now(),
-                name: productForm.name,
-                brand: productForm.brand,
-                price: parseFloat(productForm.price) || 0,
-                unit: productForm.unit,
-                stock: parseInt(productForm.stock) || 0,
-            };
-
-            setCategories(
-                categories.map((cat) =>
-                    cat.id === parseInt(productForm.categoryId)
-                        ? {
-                              ...cat,
-                              subcategories: cat.subcategories.map((sub) =>
-                                  sub.id === parseInt(productForm.subcategoryId)
-                                      ? { ...sub, products: [...sub.products, newProduct] }
-                                      : sub
-                              ),
-                          }
-                        : cat
-                )
-            );
-
-            setProductForm({
-                name: "",
-                brand: "",
-                price: "",
-                unit: "",
-                stock: "",
-                categoryId: "",
-                subcategoryId: "",
-            });
-            setOpenDialog(null);
+            try {
+                const res = await axios.post("/api/products", {
+                    name: productForm.name,
+                    brand: productForm.brand,
+                    price: parseFloat(productForm.price) || 0,
+                    unit: productForm.unit,
+                    stock: parseInt(productForm.stock) || 0,
+                    subcategoryId: productForm.subcategoryId,
+                    image: productForm.image,
+                });
+                // Refetch categories and subcategories
+                const catRes = await axios.get("/api/categories");
+                const subRes = await axios.get("/api/subcategories");
+                const subMap = {};
+                subRes.data.forEach((sub) => {
+                    subMap[sub._id] = sub;
+                });
+                const categoriesWithSubsAndProducts = catRes.data.map((cat) => ({
+                    ...cat,
+                    subcategories: cat.subcategories.map((sub) => subMap[sub._id] || sub),
+                }));
+                setCategories(categoriesWithSubsAndProducts);
+                setProductForm({
+                    name: "",
+                    brand: "",
+                    price: "",
+                    unit: "",
+                    stock: "",
+                    categoryId: "",
+                    subcategoryId: "",
+                    image: "",
+                });
+                setOpenDialog(null);
+            } catch (err) {
+                setError("Failed to add product");
+            }
         }
     };
 
     // Get subcategories for selected category
     const getSubcategoriesForCategory = (categoryId) => {
-        const category = categories.find((cat) => cat.id === parseInt(categoryId));
+        const category = categories.find(
+            (cat) => cat._id === categoryId || cat.id === parseInt(categoryId)
+        );
         return category ? category.subcategories : [];
     };
 
@@ -235,6 +242,9 @@ const PrachiTrade = () => {
             sum + cat.subcategories.reduce((subSum, sub) => subSum + sub.products.length, 0),
         0
     );
+
+    if (loading) return <div className="p-8 text-center">Loading...</div>;
+    if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
 
     return (
         <div className="min-h-screen bg-gray-50 p-6">
@@ -341,7 +351,7 @@ const PrachiTrade = () => {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             {categories.map((category) => (
                                 <Card
-                                    key={category.id}
+                                    key={category._id}
                                     className="hover:shadow-md transition-shadow"
                                 >
                                     <CardHeader>
@@ -355,7 +365,7 @@ const PrachiTrade = () => {
                                         <div className="space-y-3">
                                             {category.subcategories.map((subcategory) => (
                                                 <div
-                                                    key={subcategory.id}
+                                                    key={subcategory._id}
                                                     className="border rounded-lg p-3"
                                                 >
                                                     <div className="flex justify-between items-start mb-2">
@@ -450,7 +460,7 @@ const PrachiTrade = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {categories.map((category) => (
-                                <Card key={category.id}>
+                                <Card key={category._id}>
                                     <CardHeader>
                                         <CardTitle className="flex items-center gap-2">
                                             {getIcon(category.icon)}
@@ -517,8 +527,8 @@ const PrachiTrade = () => {
                                                 <SelectContent>
                                                     {categories.map((category) => (
                                                         <SelectItem
-                                                            key={category.id}
-                                                            value={category.id.toString()}
+                                                            key={category._id}
+                                                            value={category._id.toString()}
                                                         >
                                                             {category.name}
                                                         </SelectItem>
@@ -568,7 +578,7 @@ const PrachiTrade = () => {
 
                         <div className="space-y-6">
                             {categories.map((category) => (
-                                <Card key={category.id}>
+                                <Card key={category._id}>
                                     <CardHeader>
                                         <CardTitle className="flex items-center gap-2">
                                             {getIcon(category.icon)}
@@ -579,7 +589,7 @@ const PrachiTrade = () => {
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                             {category.subcategories.map((subcategory) => (
                                                 <div
-                                                    key={subcategory.id}
+                                                    key={subcategory._id}
                                                     className="border rounded-lg p-4"
                                                 >
                                                     <div className="flex justify-between items-start mb-2">
@@ -648,8 +658,8 @@ const PrachiTrade = () => {
                                                 <SelectContent>
                                                     {categories.map((category) => (
                                                         <SelectItem
-                                                            key={category.id}
-                                                            value={category.id.toString()}
+                                                            key={category._id}
+                                                            value={category._id.toString()}
                                                         >
                                                             {category.name}
                                                         </SelectItem>
@@ -676,8 +686,8 @@ const PrachiTrade = () => {
                                                         productForm.categoryId
                                                     ).map((subcategory) => (
                                                         <SelectItem
-                                                            key={subcategory.id}
-                                                            value={subcategory.id.toString()}
+                                                            key={subcategory._id}
+                                                            value={subcategory._id.toString()}
                                                         >
                                                             {subcategory.name}
                                                         </SelectItem>
@@ -727,6 +737,8 @@ const PrachiTrade = () => {
                                                         })
                                                     }
                                                     placeholder="350"
+                                                    required
+                                                    min={0}
                                                 />
                                             </div>
                                             <div>
@@ -759,6 +771,33 @@ const PrachiTrade = () => {
                                                 placeholder="100"
                                             />
                                         </div>
+                                        <div>
+                                            <Label htmlFor="productImage">Product Image</Label>
+                                            <Input
+                                                id="productImage"
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={handleImageUpload}
+                                                disabled={imageUploading}
+                                            />
+                                            {imageUploading && (
+                                                <div className="text-sm text-gray-500 mt-1">
+                                                    Uploading...
+                                                </div>
+                                            )}
+                                            {imageError && (
+                                                <div className="text-sm text-red-500 mt-1">
+                                                    {imageError}
+                                                </div>
+                                            )}
+                                            {productForm.image && (
+                                                <img
+                                                    src={productForm.image}
+                                                    alt="Product Preview"
+                                                    className="mt-2 rounded border w-32 h-32 object-cover"
+                                                />
+                                            )}
+                                        </div>
                                         <Button onClick={addProduct} className="w-full">
                                             Add Product
                                         </Button>
@@ -769,7 +808,7 @@ const PrachiTrade = () => {
 
                         <div className="space-y-6">
                             {categories.map((category) => (
-                                <Card key={category.id}>
+                                <Card key={category._id}>
                                     <CardHeader>
                                         <CardTitle className="flex items-center gap-2">
                                             {getIcon(category.icon)}
@@ -778,7 +817,7 @@ const PrachiTrade = () => {
                                     </CardHeader>
                                     <CardContent>
                                         {category.subcategories.map((subcategory) => (
-                                            <div key={subcategory.id} className="mb-6 last:mb-0">
+                                            <div key={subcategory._id} className="mb-6 last:mb-0">
                                                 <h4 className="font-medium text-lg mb-3">
                                                     {subcategory.name}
                                                 </h4>

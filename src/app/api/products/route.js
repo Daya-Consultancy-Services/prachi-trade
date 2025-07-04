@@ -11,16 +11,45 @@ export async function GET() {
 
 export async function POST(req) {
     await dbConnect();
-    const { name, description, image, brand, subcategoryId } = await req.json();
-    if (!name || !subcategoryId) {
+    try {
+        // Read the body ONCE and store it
+        const body = await req.json();
+
+        const { name, description, image, brand, subcategoryId, price, unit } = body;
+
+        if (!name || !subcategoryId) {
+            return NextResponse.json(
+                { error: "Name and subcategoryId are required." },
+                { status: 400 }
+            );
+        }
+
+        // Force price to be a number (in case client sends string)
+        const parsedPrice = Number(price);
+        if (isNaN(parsedPrice)) {
+            return NextResponse.json({ error: "Price must be a number." }, { status: 400 });
+        }
+
+        const product = new Product({
+            name,
+            description,
+            image,
+            brand,
+            subcategory: subcategoryId,
+            price: parsedPrice,
+            unit,
+        });
+
+        await product.save();
+
+        await Subcategory.findByIdAndUpdate(subcategoryId, { $push: { products: product._id } });
+
+        return NextResponse.json(product, { status: 201 });
+    } catch (error) {
+        console.error("Server Error:", error);
         return NextResponse.json(
-            { error: "Name and subcategoryId are required." },
-            { status: 400 }
+            { error: "Internal server error: " + error.message },
+            { status: 500 }
         );
     }
-    const product = new Product({ name, description, image, brand, subcategory: subcategoryId });
-    await product.save();
-    // Add product to subcategory
-    await Subcategory.findByIdAndUpdate(subcategoryId, { $push: { products: product._id } });
-    return NextResponse.json(product, { status: 201 });
 }

@@ -6,6 +6,8 @@ const ProductSchema = new mongoose.Schema(
         description: { type: String },
         image: { type: String }, // Cloudinary URL
         brand: { type: String },
+        price: { type: Number },
+        unit: { type: String },
         subcategory: { type: mongoose.Schema.Types.ObjectId, ref: "Subcategory", required: true },
     },
     { timestamps: true }
