@@ -4,10 +4,17 @@ import { ChevronDown, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { COMPANY_INFO } from "@/lib/constants";
 import { navigationItems } from "@/data/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        fetch("/api/categories")
+            .then((res) => res.json())
+            .then((data) => setCategories(data));
+    }, []);
 
     return (
         <header className="relative w-full">
@@ -33,16 +40,7 @@ export default function Header() {
                 <nav className="hidden md:flex space-x-8 font-medium">
                     {navigationItems.map((item) => (
                         <div key={item.name} className="relative group">
-                            {/* <Link
-                                href={item.href}
-                                className="hover:text-orange-500 transition-colors flex items-center"
-                            >
-                                {item.name}
-                                {item.hasDropdown && <ChevronDown className="ml-1 w-4 h-4" />}
-                            </Link> */}
-
                             {item.hasDropdown ? (
-                                // For dropdown items, use a button instead of Link
                                 <button
                                     className="hover:text-orange-500 transition-colors flex items-center focus:outline-none"
                                     onClick={(e) => e.preventDefault()}
@@ -51,7 +49,6 @@ export default function Header() {
                                     <ChevronDown className="ml-1 w-4 h-4" />
                                 </button>
                             ) : (
-                                // Regular navigation items still use Link
                                 <Link
                                     href={item.href}
                                     className="hover:text-orange-500 transition-colors flex items-center"
@@ -60,33 +57,35 @@ export default function Header() {
                                 </Link>
                             )}
 
+                            {/* Dynamic Dropdown for PRODUCTS */}
                             {item.hasDropdown && (
-                                <div className="absolute top-full left-0 mt-2 w-48 bg-white text-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                <div className="absolute top-full left-0 mt-2 w-56 bg-white text-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                                     <div className="py-2">
-                                        <Link
-                                            href="/buildingmaterial"
-                                            className="block px-4 py-2 hover:bg-gray-100"
-                                        >
-                                            Building Materials
-                                        </Link>
-                                        <Link
-                                            href="/fabrication"
-                                            className="block px-4 py-2 hover:bg-gray-100"
-                                        >
-                                            Fabrication
-                                        </Link>
-                                        <Link
-                                            href="/tilepipe"
-                                            className="block px-4 py-2 hover:bg-gray-100"
-                                        >
-                                            Tiles & Sanitary
-                                        </Link>
-                                        <Link
-                                            href="/paint"
-                                            className="block px-4 py-2 hover:bg-gray-100"
-                                        >
-                                            Paint
-                                        </Link>
+                                        {categories.map((cat) => (
+                                            <div key={cat._id} className="group/parent relative">
+                                                <Link
+                                                    href={`/category/${cat._id}`}
+                                                    className="block px-4 py-2 hover:bg-gray-100 whitespace-nowrap"
+                                                >
+                                                    {cat.name}
+                                                </Link>
+                                                {/* Subcategories as nested menu */}
+                                                {cat.subcategories &&
+                                                    cat.subcategories.length > 0 && (
+                                                        <div className="absolute left-full top-0 mt-0 ml-1 w-48 bg-white text-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover/parent:opacity-100 group-hover/parent:visible transition-all duration-200 z-50">
+                                                            {cat.subcategories.map((sub) => (
+                                                                <Link
+                                                                    key={sub._id}
+                                                                    href={`/subcategory/${sub._id}`}
+                                                                    className="block px-4 py-2 hover:bg-gray-100 whitespace-nowrap"
+                                                                >
+                                                                    {sub.name}
+                                                                </Link>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             )}
@@ -124,43 +123,43 @@ export default function Header() {
                             {navigationItems.map((item) => (
                                 <div key={item.name} className="border-b border-gray-700">
                                     <Link
-                                        // href={item.href}
                                         className="block px-6 py-3 hover:text-orange-500 transition-colors"
                                         onClick={() => setMobileMenuOpen(false)}
+                                        href={item.href || "#"}
                                     >
                                         {item.name}
                                     </Link>
-
+                                    {/* Dynamic Dropdown for PRODUCTS (Mobile) */}
                                     {item.hasDropdown && (
                                         <div className="pl-8 bg-gray-800">
-                                            <Link
-                                                href="/buildingmaterial"
-                                                className="block px-4 py-2 hover:text-orange-500"
-                                                onClick={() => setMobileMenuOpen(false)}
-                                            >
-                                                Building Materials
-                                            </Link>
-                                            <Link
-                                                href="/fabrication"
-                                                className="block px-4 py-2 hover:text-orange-500"
-                                                onClick={() => setMobileMenuOpen(false)}
-                                            >
-                                                Fabrication
-                                            </Link>
-                                            <Link
-                                                href="/tilepipe"
-                                                className="block px-4 py-2 hover:text-orange-500"
-                                                onClick={() => setMobileMenuOpen(false)}
-                                            >
-                                                Tiles & Sanitary
-                                            </Link>
-                                            <Link
-                                                href="/paint"
-                                                className="block px-4 py-2 hover:text-orange-500"
-                                                onClick={() => setMobileMenuOpen(false)}
-                                            >
-                                                Paint
-                                            </Link>
+                                            {categories.map((cat) => (
+                                                <div key={cat._id}>
+                                                    <Link
+                                                        href={`/category/${cat._id}`}
+                                                        className="block px-4 py-2 hover:text-orange-500"
+                                                        onClick={() => setMobileMenuOpen(false)}
+                                                    >
+                                                        {cat.name}
+                                                    </Link>
+                                                    {cat.subcategories &&
+                                                        cat.subcategories.length > 0 && (
+                                                            <div className="pl-4">
+                                                                {cat.subcategories.map((sub) => (
+                                                                    <Link
+                                                                        key={sub._id}
+                                                                        href={`/subcategory/${sub._id}`}
+                                                                        className="block px-4 py-2 hover:text-orange-500"
+                                                                        onClick={() =>
+                                                                            setMobileMenuOpen(false)
+                                                                        }
+                                                                    >
+                                                                        {sub.name}
+                                                                    </Link>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                </div>
+                                            ))}
                                         </div>
                                     )}
                                 </div>

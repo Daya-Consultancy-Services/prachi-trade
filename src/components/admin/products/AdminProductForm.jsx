@@ -44,7 +44,10 @@ const AdminProductForm = ({
                 <DialogTitle>Add New Product</DialogTitle>
                 <DialogDescription>Create a new product</DialogDescription>
             </DialogHeader>
-            <div className="space-y-4">
+            <div
+                className="space-y-4 max-h-[70vh] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100"
+                style={{ scrollbarWidth: "thin" }}
+            >
                 <div>
                     <Label htmlFor="productCategory">Category</Label>
                     <Select
@@ -143,6 +146,18 @@ const AdminProductForm = ({
                         value={productForm.stock}
                         onChange={(e) => setProductForm({ ...productForm, stock: e.target.value })}
                         placeholder="100"
+                    />
+                </div>
+                <div>
+                    <Label htmlFor="productDescription">Description</Label>
+                    <Textarea
+                        id="productDescription"
+                        value={productForm.description}
+                        onChange={(e) =>
+                            setProductForm({ ...productForm, description: e.target.value })
+                        }
+                        placeholder="Enter product description"
+                        rows={3}
                     />
                 </div>
                 <div>
