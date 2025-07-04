@@ -61,6 +61,7 @@ const PrachiTrade = () => {
         categoryId: "",
         subcategoryId: "",
         image: "",
+        description: "",
     });
     const [imageUploading, setImageUploading] = useState(false);
     const [imageError, setImageError] = useState(null);
@@ -201,6 +202,7 @@ const PrachiTrade = () => {
                     stock: parseInt(productForm.stock) || 0,
                     subcategoryId: productForm.subcategoryId,
                     image: productForm.image,
+                    description: productForm.description,
                 });
                 // Refetch categories and subcategories
                 const catRes = await axios.get("/api/categories");
@@ -223,6 +225,7 @@ const PrachiTrade = () => {
                     categoryId: "",
                     subcategoryId: "",
                     image: "",
+                    description: "",
                 });
                 setOpenDialog(null);
             } catch (err) {

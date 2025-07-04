@@ -5,6 +5,7 @@ import Link from "next/link";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import BrandsSection from "@/components/sections/brand-section";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function CategoryPage() {
     const { categoryId } = useParams();
@@ -19,7 +20,14 @@ export default function CategoryPage() {
             });
     }, [categoryId]);
 
-    if (!category) return <div>Loading...</div>;
+    if (!category)
+        return (
+            <div className="flex justify-center space-x-10 p-8">
+                {[1, 2, 3].map((i) => (
+                    <Skeleton key={i} className="w-72 h-96" />
+                ))}
+            </div>
+        );
 
     return (
         <div>
