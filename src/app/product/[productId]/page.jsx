@@ -8,6 +8,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function ProductDetailPage() {
     const { productId } = useParams();
     const [product, setProduct] = useState(null);
+    const [enquiry, setEnquiry] = useState({ name: "", email: "", mobile: "", message: "" });
+    const [enquiryStatus, setEnquiryStatus] = useState(null);
 
     useEffect(() => {
         fetch("/api/products")
@@ -46,6 +48,87 @@ export default function ProductDetailPage() {
                         <span className="font-bold">Price:</span> <span>₹{product.price}</span>
                         <span className="font-bold">Unit:</span> <span>{product.unit}</span>
                     </div>
+                </div>
+            </section>
+            {/* Product Enquiry Form */}
+            <section className="py-8 bg-gray-50">
+                <div className="max-w-xl mx-auto bg-white rounded-lg shadow-md p-8">
+                    <h3 className="text-2xl font-bold mb-4 text-center text-gray-800">
+                        Product Enquiry
+                    </h3>
+                    {enquiryStatus && (
+                        <div
+                            className={`mb-4 text-center font-semibold ${
+                                enquiryStatus.success ? "text-green-600" : "text-red-600"
+                            }`}
+                        >
+                            {enquiryStatus.message}
+                        </div>
+                    )}
+                    <form
+                        onSubmit={async (e) => {
+                            e.preventDefault();
+                            setEnquiryStatus(null);
+                            const res = await fetch("/api/enquiries", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ ...enquiry, product: product.name }),
+                            });
+                            if (res.ok) {
+                                setEnquiry({ name: "", email: "", mobile: "", message: "" });
+                                setEnquiryStatus({
+                                    success: true,
+                                    message: "Enquiry submitted successfully!",
+                                });
+                            } else {
+                                const data = await res.json();
+                                setEnquiryStatus({
+                                    success: false,
+                                    message: data.error || "Failed to submit enquiry.",
+                                });
+                            }
+                        }}
+                        className="space-y-4"
+                    >
+                        <input
+                            type="text"
+                            required
+                            placeholder="Your Name"
+                            className="w-full border rounded px-4 py-2"
+                            value={enquiry.name}
+                            onChange={(e) => setEnquiry({ ...enquiry, name: e.target.value })}
+                        />
+                        <input
+                            type="email"
+                            required
+                            placeholder="Your Email"
+                            className="w-full border rounded px-4 py-2"
+                            value={enquiry.email}
+                            onChange={(e) => setEnquiry({ ...enquiry, email: e.target.value })}
+                        />
+                        <input
+                            type="tel"
+                            required
+                            placeholder="Your Mobile"
+                            className="w-full border rounded px-4 py-2"
+                            value={enquiry.mobile}
+                            onChange={(e) => setEnquiry({ ...enquiry, mobile: e.target.value })}
+                        />
+                        <textarea
+                            required
+                            placeholder="Your Message"
+                            className="w-full border rounded px-4 py-2"
+                            rows={4}
+                            value={enquiry.message}
+                            onChange={(e) => setEnquiry({ ...enquiry, message: e.target.value })}
+                        />
+                        <button
+                            type="submit"
+                            className="w-full bg-orange-600 text-white py-2 px-4 rounded font-bold hover:bg-orange-700 transition"
+                        >
+                            Submit Enquiry
+                        </button>
+                    </form>
                 </div>
             </section>
             <Footer />
