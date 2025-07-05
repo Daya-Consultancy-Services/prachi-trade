@@ -70,10 +70,20 @@ export default function Header() {
                                             const products = subcategories
                                                 .filter((sub) => sub.category === cat._id)
                                                 .flatMap((sub) => sub.products || []);
+
+                                            console.log("cat>>>>", cat);
+
                                             return (
                                                 <div key={cat._id} className="min-w-[200px]">
                                                     <div className="font-bold text-blue-600 text-lg mb-2">
-                                                        {cat.name}
+                                                        <Link
+                                                            href={`/${cat.name
+                                                                .toLowerCase()
+                                                                .replace(/ /g, "")}`}
+                                                            className="font-bold text-blue-600 text-lg mb-2 hover:underline"
+                                                        >
+                                                            {cat.name}
+                                                        </Link>
                                                     </div>
                                                     <ul className="ml-2 space-y-1">
                                                         {products.length > 0 ? (

@@ -1,10 +1,41 @@
 "use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
 import BrandsSection from "@/components/sections/brand-section";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export default function buildingmaterial() {
+export default function BuildingMaterialPage() {
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        // Fetch categories and subcategories to get the correct category ID
+        Promise.all([
+            fetch("/api/categories").then((res) => res.json()),
+            fetch("/api/subcategories").then((res) => res.json()),
+        ]).then(([categories, subcategories]) => {
+            // Find the category for Building Material (adjust the name if needed)
+            const buildingCategory = categories.find((cat) =>
+                cat.name.toLowerCase().includes("building")
+            );
+            if (!buildingCategory) {
+                setProducts([]);
+                setLoading(false);
+                return;
+            }
+            // Get all subcategories for this category
+            const buildingSubcategories = subcategories.filter(
+                (sub) => sub.category === buildingCategory._id
+            );
+            // Gather all products from all subcategories
+            const allProducts = buildingSubcategories.flatMap((sub) => sub.products || []);
+            setProducts(allProducts);
+            setLoading(false);
+        });
+    }, []);
+
     return (
         <div>
             <Header />
@@ -25,78 +56,34 @@ export default function buildingmaterial() {
                     Our <span className="text-orange-600">New Products</span>
                 </h2>
 
-                <div className="flex justify-center space-x-10 overflow-x-auto p-4">
-                    {/* Steel Card */}
-                    <div className="bg-white border rounded-xl shadow-md p-2 w-72 min-w-[270px] relative">
-                        <img
-                            src="/steel2.png"
-                            alt="Steel"
-                            className="w-full h-60 object-cover mb-4"
-                        />
-                        <h3 className="text-xl font-bold mb-2">MS Rod</h3>
-                        <p className="text-sm mb-4">
-                            Jindal Panther 550D, JSW steel 550D, SMC 550D, SEL 500D, Tata Tiscon
-                            550D
-                        </p>
-                        <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold">
-                            <Link href="/material/msrod" className="block px-4 py-2">
-                                VIEW PRODUCTS
-                            </Link>
-                        </button>
-                    </div>
-
-                    {/* Cement Card */}
-                    <div className="bg-white border rounded-xl shadow-md p-2 w-72 min-w-[270px] relative">
-                        <img
-                            src="/cement4.jpg"
-                            alt="Cement"
-                            className="w-full h-60 object-cover mb-4"
-                        />
-
-                        <h3 className="text-xl font-bold mb-2">Cement</h3>
-
-                        <p className="text-sm mb-4">
-                            DALMIA, Nuvoco, Ultratech, Maha Shakti, Raasi, Ramco, PPC, PSC
-                        </p>
-
-                        <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold">
-                            <Link href="/material/cement" className="block px-4 py-2">
-                                VIEW PRODUCTS
-                            </Link>
-                        </button>
-                    </div>
-
-                    {/* RMC Card */}
-                    {/* <div className="bg-white border rounded-xl shadow-md p-2 w-72 min-w-[270px] relative">
-                        <img src="/rmc1.png" alt="RMC" className="w-full h-60 object-cover mb-4" />
-                        <h3 className="text-xl font-bold mb-2">RMC</h3>
-                        <p className="text-sm mb-4">
-                            Ultratech, DALMIA, Nuvoco, Ultratech, Maha Shakti, Raasi, Ramco
-                        </p>
-                        <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold">
-                            <Link href="material" className="block px-4 py-2">
-                                VIEW PRODUCTS
-                            </Link>
-                        </button>
-                    </div> */}
-
-                    {/* Roofing Sheets Card */}
-                    {/* <div className="bg-white border rounded-xl shadow-md p-2 w-72 min-w-[270px] relative">
-                        <img
-                            src="/roofing sheet1.png"
-                            alt="Roofing Sheets"
-                            className="w-full h-60 object-cover mb-4"
-                        />
-                        <h3 className="text-xl font-bold mb-2">Roofing Sheets</h3>
-                        <p className="text-sm mb-4">
-                            Ultratech, DALMIA, Nuvoco, Ultratech, Maha Shakti, Raasi, Ramco
-                        </p>
-                        <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold">
-                            <Link href="material" className="block px-4 py-2">
-                                VIEW PRODUCTS
-                            </Link>
-                        </button>
-                    </div> */}
+                <div className="flex flex-wrap justify-center gap-8 p-4">
+                    {loading ? (
+                        [1, 2, 3, 4].map((i) => <Skeleton key={i} className="w-72 h-96" />)
+                    ) : products.length > 0 ? (
+                        products.map((prod) => (
+                            <div
+                                key={prod._id}
+                                className="bg-white border rounded-xl shadow-md p-4 w-72 min-w-[270px] flex flex-col items-center"
+                            >
+                                <img
+                                    src={prod.image || "/cement4.jpg"}
+                                    alt={prod.name}
+                                    className="w-full h-40 object-cover mb-4 rounded"
+                                />
+                                <h3 className="text-xl font-bold mb-2">
+                                    {prod.brand || prod.name}
+                                </h3>
+                                <p className="text-sm mb-4">{prod.name}</p>
+                                <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold">
+                                    <Link href={`/product/${prod._id}`} className="block px-4 py-2">
+                                        VIEW PRODUCT
+                                    </Link>
+                                </button>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No products found in this category.</p>
+                    )}
                 </div>
 
                 <div>

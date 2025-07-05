@@ -10,62 +10,73 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function CategoryPage() {
     const { categoryId } = useParams();
     const [category, setCategory] = useState(null);
+    const [subcategories, setSubcategories] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch("/api/categories")
-            .then((res) => res.json())
-            .then((data) => {
-                const found = data.find((cat) => cat._id === categoryId);
-                setCategory(found);
-            });
+        setLoading(true);
+        Promise.all([
+            fetch("/api/categories").then((res) => res.json()),
+            fetch("/api/subcategories").then((res) => res.json()),
+        ]).then(([categories, subcategories]) => {
+            const found = categories.find((cat) => cat._id === categoryId);
+            setCategory(found);
+            setSubcategories(subcategories.filter((sub) => sub.category === categoryId));
+            setLoading(false);
+        });
     }, [categoryId]);
 
-    if (!category)
+    // Gather all products from all subcategories of this category
+    const products = subcategories.flatMap((sub) => sub.products || []);
+
+    if (loading) {
         return (
             <div className="flex justify-center space-x-10 p-8">
-                {[1, 2, 3].map((i) => (
+                {[1, 2, 3, 4].map((i) => (
                     <Skeleton key={i} className="w-72 h-96" />
                 ))}
             </div>
         );
+    }
 
     return (
         <div>
             <Header />
             <section className="py-12 bg-white text-center">
                 <div>
-                    <p className="text-gray-700 mb-4">Welcome to the {category.name} category!</p>
+                    <p className="text-gray-700 mb-4">
+                        {category?.name ? `All products in ${category.name}` : "Category"}
+                    </p>
                 </div>
                 <h6>PRODUCTS</h6>
                 <h2 className="text-3xl font-bold mb-4">
                     Our <span className="text-orange-600">Products</span>
                 </h2>
-                <div className="flex justify-center space-x-10 overflow-x-auto p-4">
-                    {category.subcategories && category.subcategories.length > 0 ? (
-                        category.subcategories.map((sub) => (
+                <div className="flex flex-wrap justify-center gap-8 p-4">
+                    {products.length > 0 ? (
+                        products.map((prod) => (
                             <div
-                                key={sub._id}
-                                className="bg-white border rounded-xl shadow-md p-2 w-72 min-w-[270px] relative"
+                                key={prod._id}
+                                className="bg-white border rounded-xl shadow-md p-4 w-72 min-w-[270px] flex flex-col items-center"
                             >
                                 <img
-                                    src="/cement4.jpg"
-                                    alt={sub.name}
-                                    className="w-full h-60 object-cover mb-4"
+                                    src={prod.image || "/cement4.jpg"}
+                                    alt={prod.name}
+                                    className="w-full h-40 object-cover mb-4 rounded"
                                 />
-                                <h3 className="text-xl font-bold mb-2">{sub.name}</h3>
-                                <p className="text-sm mb-4"></p>
+                                <h3 className="text-xl font-bold mb-2">
+                                    {prod.brand || prod.name}
+                                </h3>
+                                <p className="text-sm mb-4">{prod.name}</p>
                                 <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold">
-                                    <Link
-                                        href={`/subcategory/${sub._id}`}
-                                        className="block px-4 py-2"
-                                    >
-                                        VIEW PRODUCTS
+                                    <Link href={`/product/${prod._id}`} className="block px-4 py-2">
+                                        VIEW PRODUCT
                                     </Link>
                                 </button>
                             </div>
                         ))
                     ) : (
-                        <p>No subcategories found.</p>
+                        <p>No products found in this category.</p>
                     )}
                 </div>
             </section>
