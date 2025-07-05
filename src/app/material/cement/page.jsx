@@ -2,8 +2,16 @@
 import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
 import Image from "next/image";
+import { useEffect } from "react";
 
 export default function CementProductsPage() {
+    useEffect(() => {
+        const response = fetch("/api/products");
+        const data = response.json();
+
+        console.log("data>>>>>>>>>>>>>", data);
+    }, []);
+
     return (
         <div>
             <Header />
