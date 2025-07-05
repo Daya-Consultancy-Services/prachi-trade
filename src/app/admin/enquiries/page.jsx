@@ -46,6 +46,11 @@ const EnquiriesContent = () => {
                                         <span className="text-sm text-gray-500">
                                             {enquiry.email}
                                         </span>
+                                        {enquiry.mobile && (
+                                            <span className="text-sm text-gray-500">
+                                                {enquiry.mobile}
+                                            </span>
+                                        )}
                                         {enquiry.status === "unread" && (
                                             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                                 New
