@@ -6,6 +6,7 @@ import Header from "@/components/dashboard/Header";
 import Sidebar from "@/components/dashboard/Sidebar";
 import AdminLayout from "@/components/admin-layout";
 import SummaryCard from "@/components/SummaryCard";
+import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState("dashboard");
@@ -66,6 +67,9 @@ const AdminDashboard = () => {
                     iconBg="bg-orange-100"
                     iconColor="text-orange-600"
                 />
+            </div>
+            <div className="mb-10">
+                <ChartAreaInteractive />
             </div>
             {/* Add more dashboard content here if needed */}
         </div>

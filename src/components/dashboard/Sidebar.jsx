@@ -64,17 +64,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, enquiries }) => {
                             </span>
                         )}
                     </Link>
-                    <Link
-                        href="/admin/analytics"
-                        className={`w-full flex items-center px-4 py-2 text-left rounded-lg transition-colors ${
-                            pathname === "/admin/analytics"
-                                ? "bg-blue-600 text-white"
-                                : "text-gray-300 hover:bg-gray-700"
-                        }`}
-                    >
-                        <Users className="mr-3" size={20} />
-                        Analytics
-                    </Link>
                 </div>
                 <div className="absolute bottom-4 left-4 right-4">
                     <button
