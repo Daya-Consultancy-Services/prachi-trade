@@ -4,23 +4,43 @@ import { useParams } from "next/navigation";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 export default function ProductDetailPage() {
     const { productId } = useParams();
     const [product, setProduct] = useState(null);
     const [enquiry, setEnquiry] = useState({ name: "", email: "", mobile: "", message: "" });
     const [enquiryStatus, setEnquiryStatus] = useState(null);
+    const [subcategoryProducts, setSubcategoryProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        setLoading(true);
         fetch("/api/products")
             .then((res) => res.json())
-            .then((data) => {
-                const found = data.find((prod) => prod._id === productId);
+            .then((products) => {
+                const found = products.find((prod) => prod._id === productId);
                 setProduct(found);
+
+                if (found && found.subcategory) {
+                    // Fetch all products in the same subcategory
+                    fetch("/api/subcategories")
+                        .then((res) => res.json())
+                        .then((subcategories) => {
+                            const sub = subcategories.find((s) => s._id === found.subcategory);
+                            setSubcategoryProducts(
+                                sub?.products?.filter((p) => p._id !== productId) || []
+                            );
+                            setLoading(false);
+                        });
+                } else {
+                    setSubcategoryProducts([]);
+                    setLoading(false);
+                }
             });
     }, [productId]);
 
-    if (!product)
+    if (loading || !product)
         return (
             <div className="max-w-2xl mx-auto py-12">
                 <Skeleton className="w-full h-80 mb-6 rounded-xl" />
@@ -131,6 +151,42 @@ export default function ProductDetailPage() {
                     </form>
                 </div>
             </section>
+            {/* More products in the same subcategory */}
+            {subcategoryProducts.length > 0 && (
+                <section className="py-8 bg-gray-50">
+                    <div className="max-w-5xl mx-auto">
+                        <h3 className="text-2xl font-bold mb-6 text-center text-gray-800">
+                            More in {product.subcategoryName || "this subcategory"}
+                        </h3>
+                        <div className="flex flex-wrap justify-center gap-8">
+                            {subcategoryProducts.map((prod) => (
+                                <div
+                                    key={prod._id}
+                                    className="bg-white border rounded-xl shadow-md p-4 w-72 min-w-[270px] flex flex-col items-center"
+                                >
+                                    <img
+                                        src={prod.image || "/cement4.jpg"}
+                                        alt={prod.name}
+                                        className="w-full h-40 object-cover mb-4 rounded"
+                                    />
+                                    <h3 className="text-xl font-bold mb-2">
+                                        {prod.brand || prod.name}
+                                    </h3>
+                                    <p className="text-sm mb-4">{prod.name}</p>
+                                    <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold">
+                                        <Link
+                                            href={`/product/${prod._id}`}
+                                            className="block px-4 py-2"
+                                        >
+                                            VIEW PRODUCT
+                                        </Link>
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
             <Footer />
         </div>
     );

@@ -32,39 +32,71 @@ export default function SubcategoryPage() {
     return (
         <div>
             <Header />
+            {/* Hero Section */}
+            <section className="bg-gradient-to-r from-orange-400 to-orange-600 py-12 text-white text-center">
+                <h1 className="text-3xl md:text-4xl font-bold mb-2">
+                    THE BEST CEMENT DEALER TO SAFEGUARDING YOUR CONSTRUCTIONAL SOLUTION
+                </h1>
+                <p className="max-w-2xl mx-auto text-lg opacity-90">
+                    We offer a wide range of cement products to meet your construction needs.
+                    Quality, reliability, and service you can trust.
+                </p>
+            </section>
             <section className="py-12 bg-white text-center">
-                <div>
-                    <p className="text-gray-700 mb-4">
-                        Welcome to the {subcategory.name} subcategory!
-                    </p>
-                </div>
-                <h6>PRODUCTS</h6>
-                <h2 className="text-3xl font-bold mb-4">
-                    Our <span className="text-orange-600">Products</span>
-                </h2>
-                <div className="flex justify-center space-x-10 overflow-x-auto p-4">
+                <div className="max-w-4xl mx-auto mt-10">
                     {subcategory.products && subcategory.products.length > 0 ? (
-                        subcategory.products.map((prod) => (
-                            <div
-                                key={prod._id}
-                                className="bg-white border rounded-xl shadow-md p-2 w-72 min-w-[270px] relative"
-                            >
-                                <img
-                                    src={prod.image || "/cement4.jpg"}
-                                    alt={prod.name}
-                                    className="w-full h-60 object-cover mb-4"
-                                />
-                                <h3 className="text-xl font-bold mb-2">{prod.name}</h3>
-                                <p className="text-sm mb-4">{prod.brand}</p>
-                                <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold">
-                                    <Link href={`/product/${prod._id}`} className="block px-4 py-2">
-                                        VIEW DETAILS
-                                    </Link>
-                                </button>
-                            </div>
-                        ))
+                        subcategory.products.map((prod, idx) => {
+                            const isEven = idx % 2 === 0;
+                            return (
+                                <div
+                                    key={prod._id}
+                                    className={`flex flex-col md:flex-row items-center justify-between rounded-xl shadow-md mb-10 p-8 ${
+                                        isEven ? "bg-white" : "bg-orange-50"
+                                    }`}
+                                >
+                                    {/* Image left, text right for even; reverse for odd */}
+                                    {isEven ? (
+                                        <>
+                                            <img
+                                                src={prod.image || "/cement4.jpg"}
+                                                alt={prod.name}
+                                                className="w-40 h-40 object-contain mb-4 md:mb-0 md:mr-8"
+                                            />
+                                            <div className="flex-1 text-left">
+                                                <div className="bg-orange-100 px-4 py-2 rounded mb-2 inline-block">
+                                                    <h2 className="text-2xl font-bold text-orange-700">
+                                                        {prod.name}
+                                                    </h2>
+                                                </div>
+                                                <p className="mb-2 text-gray-700 text-base">
+                                                    {prod.description}
+                                                </p>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="flex-1 text-left md:mr-8">
+                                                <div className="bg-orange-100 px-4 py-2 rounded mb-2 inline-block">
+                                                    <h2 className="text-2xl font-bold text-orange-700">
+                                                        {prod.name}
+                                                    </h2>
+                                                </div>
+                                                <p className="mb-2 text-gray-700 text-base">
+                                                    {prod.description}
+                                                </p>
+                                            </div>
+                                            <img
+                                                src={prod.image || "/cement4.jpg"}
+                                                alt={prod.name}
+                                                className="w-40 h-40 object-contain mb-4 md:mb-0"
+                                            />
+                                        </>
+                                    )}
+                                </div>
+                            );
+                        })
                     ) : (
-                        <p>No products found.</p>
+                        <p>No products found in this subcategory.</p>
                     )}
                 </div>
             </section>
