@@ -35,9 +35,7 @@ export default function MaterialSubcategoryPage() {
                 <div className="relative text-white max-w-5xl text-center px-4">
                     <h1 className="text-lg md:text-4xl font-bold mb-4">
                         {subcategory
-                            ? `The Best ${
-                                  subcategory.charAt(0).toUpperCase() + subcategory.slice(1)
-                              } Dealer to Safeguard Your Constructional Solution`
+                            ? `The Best Construction Dealer to Safeguard Your Constructional Solution`
                             : "Our Products"}
                     </h1>
                     <p className="text-lg md:text-sm opacity-90">
