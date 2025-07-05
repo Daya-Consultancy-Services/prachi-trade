@@ -75,8 +75,8 @@ export default function BuildingMaterialPage() {
                                 </h3>
                                 <p className="text-sm mb-4">{prod.name}</p>
                                 <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold">
-                                    <Link href={`/product/${prod._id}`} className="block px-4 py-2">
-                                        VIEW PRODUCT
+                                    <Link href={`/material`} className="block px-4 py-2">
+                                        VIEW PRODUCTS
                                     </Link>
                                 </button>
                             </div>
@@ -86,7 +86,7 @@ export default function BuildingMaterialPage() {
                     )}
                 </div>
 
-                <div>
+                {/* <div>
                     <p className="text-gray-700 mb-4">
                         At Prachi trades, we are more than just suppliers—we are the trusted
                         foundation behind your most ambitious visions in construction, architecture,
@@ -95,7 +95,7 @@ export default function BuildingMaterialPage() {
                         steel to an exquisite selection of marble, hard stone, and finely graded
                         sand.
                     </p>
-                </div>
+                </div> */}
             </section>
             <BrandsSection />
             <Footer />
