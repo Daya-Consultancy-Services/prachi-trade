@@ -24,6 +24,8 @@ export default function MaterialSubcategoryPage() {
                 setProducts(data);
                 setLoading(false);
             });
+
+        console.log("prodcuts>>>>>>>>>>>", products);
     }, [subcategory]);
 
     return (

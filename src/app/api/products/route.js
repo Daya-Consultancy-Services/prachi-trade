@@ -6,16 +6,9 @@ import Subcategory from "@/models/Subcategory";
 export async function GET(req) {
     await dbConnect();
     const { searchParams } = new URL(req.url);
-    const subcategoryName = searchParams.get("subcategory");
-    if (subcategoryName) {
-        // Find the subcategory by name (case-insensitive)
-        const subcat = await Subcategory.findOne({
-            name: { $regex: `^${subcategoryName}$`, $options: "i" },
-        });
-        if (!subcat) {
-            return NextResponse.json([]); // No such subcategory
-        }
-        const products = await Product.find({ subcategory: subcat._id });
+    const subcategoryId = searchParams.get("subcategory");
+    if (subcategoryId) {
+        const products = await Product.find({ subcategory: subcategoryId });
         return NextResponse.json(products);
     }
     const products = await Product.find();

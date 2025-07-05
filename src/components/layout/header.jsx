@@ -71,8 +71,6 @@ export default function Header() {
                                                 .filter((sub) => sub.category === cat._id)
                                                 .flatMap((sub) => sub.products || []);
 
-                                            console.log("cat>>>>", cat);
-
                                             return (
                                                 <div key={cat._id} className="min-w-[200px]">
                                                     <div className="font-bold text-blue-600 text-lg mb-2">
