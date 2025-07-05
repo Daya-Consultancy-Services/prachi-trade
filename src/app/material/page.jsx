@@ -1,3 +1,5 @@
+// This file will be moved and refactored. No changes here, just a placeholder for the move.
+
 "use client";
 import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";

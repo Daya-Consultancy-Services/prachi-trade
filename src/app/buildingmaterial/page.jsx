@@ -75,7 +75,12 @@ export default function BuildingMaterialPage() {
                                 </h3>
                                 <p className="text-sm mb-4">{prod.name}</p>
                                 <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold">
-                                    <Link href={`/material`} className="block px-4 py-2">
+                                    <Link
+                                        href={`/material/${
+                                            prod.subcategoryName || prod.subcategory
+                                        }`}
+                                        className="block px-4 py-2"
+                                    >
                                         VIEW PRODUCTS
                                     </Link>
                                 </button>
