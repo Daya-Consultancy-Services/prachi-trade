@@ -9,11 +9,15 @@ import { useState, useEffect } from "react";
 export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [categories, setCategories] = useState([]);
+    const [subcategories, setSubcategories] = useState([]);
 
     useEffect(() => {
         fetch("/api/categories")
             .then((res) => res.json())
             .then((data) => setCategories(data));
+        fetch("/api/subcategories")
+            .then((res) => res.json())
+            .then((data) => setSubcategories(data));
     }, []);
 
     return (
@@ -59,33 +63,41 @@ export default function Header() {
 
                             {/* Dynamic Dropdown for PRODUCTS */}
                             {item.hasDropdown && (
-                                <div className="absolute top-full left-0 mt-2 w-56 bg-white text-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                                    <div className="py-2">
-                                        {categories.map((cat) => (
-                                            <div key={cat._id} className="group/parent relative">
-                                                <Link
-                                                    href={`/category/${cat._id}`}
-                                                    className="block px-4 py-2 hover:bg-gray-100 whitespace-nowrap"
-                                                >
-                                                    {cat.name}
-                                                </Link>
-                                                {/* Subcategories as nested menu */}
-                                                {cat.subcategories &&
-                                                    cat.subcategories.length > 0 && (
-                                                        <div className="absolute left-full top-0 mt-0 ml-1 w-48 bg-white text-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover/parent:opacity-100 group-hover/parent:visible transition-all duration-200 z-50">
-                                                            {cat.subcategories.map((sub) => (
-                                                                <Link
-                                                                    key={sub._id}
-                                                                    href={`/subcategory/${sub._id}`}
-                                                                    className="block px-4 py-2 hover:bg-gray-100 whitespace-nowrap"
+                                <div className="absolute left-1/2 top-full z-50 transform -translate-x-1/2 mt-4 w-[900px] bg-white rounded-lg shadow-lg p-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                    <div className="grid grid-cols-2 grid-rows-2 gap-x-20 gap-y-8">
+                                        {categories.slice(0, 4).map((cat) => {
+                                            // Gather all products from all subcategories of this category
+                                            const products = subcategories
+                                                .filter((sub) => sub.category === cat._id)
+                                                .flatMap((sub) => sub.products || []);
+                                            return (
+                                                <div key={cat._id} className="min-w-[200px]">
+                                                    <div className="font-bold text-blue-600 text-lg mb-2">
+                                                        {cat.name}
+                                                    </div>
+                                                    <ul className="ml-2 space-y-1">
+                                                        {products.length > 0 ? (
+                                                            products.map((prod) => (
+                                                                <li
+                                                                    key={prod._id}
+                                                                    className="text-sm text-gray-800 hover:text-orange-600 cursor-pointer"
                                                                 >
-                                                                    {sub.name}
-                                                                </Link>
-                                                            ))}
-                                                        </div>
-                                                    )}
-                                            </div>
-                                        ))}
+                                                                    <Link
+                                                                        href={`/product/${prod._id}`}
+                                                                    >
+                                                                        {prod.brand}
+                                                                    </Link>
+                                                                </li>
+                                                            ))
+                                                        ) : (
+                                                            <li className="text-xs text-gray-400 italic">
+                                                                No products
+                                                            </li>
+                                                        )}
+                                                    </ul>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             )}
