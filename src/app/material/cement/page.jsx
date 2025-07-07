@@ -5,11 +5,6 @@ import Image from "next/image";
 import { useEffect } from "react";
 
 export default function CementProductsPage() {
-    useEffect(() => {
-        const response = fetch("/api/products");
-        const data = response.json();
-    }, []);
-
     return (
         <div>
             <Header />
