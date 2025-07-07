@@ -28,11 +28,6 @@ export function ChartAreaInteractive({ daily, weekly, monthly, yearly }) {
     const isMobile = useIsMobile();
     const [timeRange, setTimeRange] = React.useState("daily");
 
-    console.log("daily>>", daily);
-    console.log("weekly", weekly);
-    console.log("monthly", monthly);
-    console.log("yearly", yearly);
-
     // Choose the data based on the selected time range
     let chartData = daily;
     if (timeRange === "weekly") chartData = weekly;

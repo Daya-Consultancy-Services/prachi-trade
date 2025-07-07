@@ -29,10 +29,6 @@ const AdminDashboard = () => {
             });
     }, []);
 
-    useEffect(() => {
-        console.log("Analytics", analytics);
-    }, [analytics]);
-
     // Calculate total visitors (all time)
     const totalVisitors = analytics.yearly.reduce((sum, y) => sum + y.count, 0);
     // This month's visitors

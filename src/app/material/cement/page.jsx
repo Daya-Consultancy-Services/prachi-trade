@@ -8,8 +8,6 @@ export default function CementProductsPage() {
     useEffect(() => {
         const response = fetch("/api/products");
         const data = response.json();
-
-        console.log("data>>>>>>>>>>>>>", data);
     }, []);
 
     return (

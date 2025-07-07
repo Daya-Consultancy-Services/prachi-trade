@@ -8,6 +8,7 @@ export async function middleware(request) {
 
     // Only protect /admin routes
     if (pathname.startsWith("/admin")) {
+        console.log("request object:", request);
         const token = request.cookies.get("token")?.value;
         // If no token, redirect to login
         if (!token) {
