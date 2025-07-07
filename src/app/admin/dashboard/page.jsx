@@ -9,67 +9,75 @@ import SummaryCard from "@/components/SummaryCard";
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 
 const AdminDashboard = () => {
-    const [activeTab, setActiveTab] = useState("dashboard");
     const [products, setProducts] = useState([]);
     const [enquiries, setEnquiries] = useState([]);
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [user, setUser] = useState({ name: "Admin User", email: "admin@buildingmaterials.com" });
+    const [analytics, setAnalytics] = useState({ daily: [], weekly: [], monthly: [], yearly: [] });
+    const [loading, setLoading] = useState(true);
 
-    // Fetch products and enquiries from API
     useEffect(() => {
         fetch("/api/products")
             .then((r) => r.json())
             .then(setProducts);
+        fetch("/api/enquiries")
+            .then((r) => r.json())
+            .then(setEnquiries);
+        fetch("/api/analytics/visits")
+            .then((r) => r.json())
+            .then((data) => {
+                setAnalytics(data);
+                setLoading(false);
+            });
     }, []);
 
-    // Analytics data
-    const analytics = {
-        totalVisitors: 1250, // TODO: Replace with real analytics if available
-        totalEnquiries: enquiries.length,
-        totalProducts: products.length,
-        monthlyVisitors: [
-            { month: "Jan", visitors: 320 },
-            { month: "Feb", visitors: 450 },
-            { month: "Mar", visitors: 280 },
-            { month: "Apr", visitors: 380 },
-            { month: "May", visitors: 520 },
-        ],
-    };
+    useEffect(() => {
+        console.log("Analytics", analytics);
+    }, [analytics]);
+
+    // Calculate total visitors (all time)
+    const totalVisitors = analytics.yearly.reduce((sum, y) => sum + y.count, 0);
+    // This month's visitors
+    const thisMonth =
+        analytics.monthly.length > 0 ? analytics.monthly[analytics.monthly.length - 1].count : 0;
 
     return (
         <div className="max-w-6xl mx-auto w-full">
             <div className="flex flex-wrap gap-6 mt-6 mb-10">
                 <SummaryCard
                     icon={Users}
-                    value={analytics.totalVisitors}
+                    value={totalVisitors}
                     label="Total Visitors"
                     iconBg="bg-blue-100"
                     iconColor="text-blue-600"
                 />
                 <SummaryCard
                     icon={MessageSquare}
-                    value={analytics.totalEnquiries}
+                    value={enquiries.length}
                     label="Total Enquiries"
                     iconBg="bg-green-100"
                     iconColor="text-green-600"
                 />
                 <SummaryCard
                     icon={Package}
-                    value={analytics.totalProducts}
+                    value={products.length}
                     label="Total Products"
                     iconBg="bg-purple-100"
                     iconColor="text-purple-600"
                 />
                 <SummaryCard
                     icon={BarChart3}
-                    value={analytics.monthlyVisitors[4].visitors}
+                    value={thisMonth}
                     label="This Month"
                     iconBg="bg-orange-100"
                     iconColor="text-orange-600"
                 />
             </div>
             <div className="mb-10">
-                <ChartAreaInteractive />
+                <ChartAreaInteractive
+                    daily={analytics?.daily || []}
+                    weekly={analytics?.weekly || []}
+                    monthly={analytics?.monthly || []}
+                    yearly={analytics?.yearly || []}
+                />
             </div>
             {/* Add more dashboard content here if needed */}
         </div>
