@@ -31,6 +31,7 @@ import AdminOverviewTab from "@/components/admin/products/AdminOverviewTab";
 import AdminCategoriesTab from "@/components/admin/products/AdminCategoriesTab";
 import AdminSubcategoriesTab from "@/components/admin/products/AdminSubcategoriesTab";
 import AdminProductsTab from "@/components/admin/products/AdminProductsTab";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Add Cloudinary config (user must fill in their own values)
 const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
@@ -259,7 +260,12 @@ const PrachiTrade = () => {
         return sum + catSum;
     }, 0);
 
-    if (loading) return <div className="p-8 text-center">Loading...</div>;
+    if (loading)
+        return (
+            <div className="flex items-center justify-center min-h-96">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            </div>
+        );
     if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
 
     return (

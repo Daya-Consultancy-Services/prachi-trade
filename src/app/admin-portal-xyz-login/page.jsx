@@ -24,8 +24,8 @@ export default function SecretAdminLoginPage() {
             return;
         }
         try {
-            const res = await axios.post("/api/admin/login", form);
-            localStorage.setItem("token", res.data.token);
+            await axios.post("/api/admin/login", form);
+
             toast.success("Login successful", { duration: 4000, position: "top-right" });
             router.push("/admin/dashboard");
         } catch (err) {
