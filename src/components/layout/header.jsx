@@ -5,11 +5,27 @@ import { Button } from "@/components/ui/button";
 import { COMPANY_INFO } from "@/lib/constants";
 import { navigationItems } from "@/data/navigation";
 import { useState, useEffect } from "react";
+import {
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogClose,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [categories, setCategories] = useState([]);
     const [subcategories, setSubcategories] = useState([]);
+    const [enquiryOpen, setEnquiryOpen] = useState(false);
+    const [form, setForm] = useState({ name: "", email: "", mobile: "", message: "", product: "" });
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         fetch("/api/categories")
@@ -19,6 +35,30 @@ export default function Header() {
             .then((res) => res.json())
             .then((data) => setSubcategories(data));
     }, []);
+
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const res = await fetch("/api/enquiries", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form),
+            });
+            if (!res.ok) throw new Error("Failed to submit enquiry");
+            toast.success("Thank you for your enquiry! We will get back to you soon.");
+            setForm({ name: "", email: "", mobile: "", message: "", product: "" });
+            setEnquiryOpen(false);
+        } catch (err) {
+            toast.error("Submission failed. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <header className="relative w-full">
@@ -124,10 +164,92 @@ export default function Header() {
                 {/* Right: Enquiry and Contact Button - Desktop */}
                 <div className="hidden md:flex relative items-center space-x-4">
                     {/* Product Enquiry Button */}
-                    <Button className="bg-white text-gray-800 hover:bg-gray-100 px-6 py-2 rounded-full font-medium">
-                        PRODUCT ENQUIRY
-                    </Button>
-
+                    <Dialog open={enquiryOpen} onOpenChange={setEnquiryOpen}>
+                        <DialogTrigger asChild>
+                            <Button
+                                className="bg-white text-gray-800 hover:bg-gray-100 px-6 py-2 rounded-full font-medium"
+                                onClick={() => setEnquiryOpen(true)}
+                            >
+                                PRODUCT ENQUIRY
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Product Enquiry</DialogTitle>
+                                <DialogDescription>
+                                    Submit your enquiry and we will get back to you soon.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <form className="space-y-4" onSubmit={handleSubmit}>
+                                <div>
+                                    <Label htmlFor="name">Name *</Label>
+                                    <Input
+                                        id="name"
+                                        name="name"
+                                        value={form.name}
+                                        onChange={handleChange}
+                                        required
+                                        placeholder="Your Name"
+                                        autoComplete="name"
+                                    />
+                                </div>
+                                <div>
+                                    <Label htmlFor="mobile">Mobile *</Label>
+                                    <Input
+                                        id="mobile"
+                                        name="mobile"
+                                        value={form.mobile}
+                                        onChange={handleChange}
+                                        required
+                                        placeholder="Your Mobile"
+                                        autoComplete="tel"
+                                    />
+                                </div>
+                                <div>
+                                    <Label htmlFor="email">Email *</Label>
+                                    <Input
+                                        id="email"
+                                        name="email"
+                                        type="email"
+                                        value={form.email}
+                                        onChange={handleChange}
+                                        required
+                                        placeholder="Your Email"
+                                        autoComplete="email"
+                                    />
+                                </div>
+                                <div>
+                                    <Label htmlFor="product">Product (optional)</Label>
+                                    <Input
+                                        id="product"
+                                        name="product"
+                                        value={form.product}
+                                        onChange={handleChange}
+                                        placeholder="Product of interest (e.g. Cement)"
+                                    />
+                                </div>
+                                <div>
+                                    <Label htmlFor="message">Message *</Label>
+                                    <Textarea
+                                        id="message"
+                                        name="message"
+                                        value={form.message}
+                                        onChange={handleChange}
+                                        required
+                                        placeholder="Your Message"
+                                        rows={3}
+                                    />
+                                </div>
+                                <Button
+                                    type="submit"
+                                    className="w-full bg-orange-600 text-white py-2 rounded-full font-bold hover:bg-orange-700 transition"
+                                    disabled={loading}
+                                >
+                                    {loading ? "Submitting..." : "SUBMIT"}
+                                </Button>
+                            </form>
+                        </DialogContent>
+                    </Dialog>
                     {/* Vertical Contact Button */}
                     <div className="bg-orange-500 absolute -right-3 top-8 text-white text-sm px-8 py-2 rotate-90 origin-bottom-right cursor-pointer hover:bg-orange-600">
                         <Link href="/contact">
@@ -187,7 +309,10 @@ export default function Header() {
 
                             {/* Mobile buttons */}
                             <div className="px-6 py-4 flex flex-col space-y-4">
-                                <Button className="bg-white text-gray-800 hover:bg-gray-100 px-6 py-2 rounded-full font-medium w-full">
+                                <Button
+                                    className="bg-white text-gray-800 hover:bg-gray-100 px-6 py-2 rounded-full font-medium w-full"
+                                    onClick={() => setEnquiryOpen(true)}
+                                >
                                     PRODUCT ENQUIRY
                                 </Button>
                                 <Link
