@@ -112,7 +112,10 @@ const PrachiTrade = () => {
     const addCategory = async () => {
         if (categoryForm.name.trim()) {
             try {
-                const res = await axios.post("/api/categories", { name: categoryForm.name });
+                const res = await axios.post("/api/categories", {
+                    name: categoryForm.name,
+                    description: categoryForm.description,
+                });
                 // Refetch categories
                 const catRes = await axios.get("/api/categories");
                 const subRes = await axios.get("/api/subcategories");
@@ -235,6 +238,52 @@ const PrachiTrade = () => {
         }
     };
 
+    const editCategory = async (categoryId, newData) => {
+        try {
+            await axios.put(`/api/categories?id=${categoryId}`, {
+                name: newData.name,
+                description: newData.description,
+            });
+
+            // Refetch categories to update the UI
+            const catRes = await axios.get("/api/categories");
+            const subRes = await axios.get("/api/subcategories");
+            const subMap = {};
+            subRes.data.forEach((sub) => {
+                subMap[sub._id] = sub;
+            });
+            const categoriesWithSubsAndProducts = catRes.data.map((cat) => ({
+                ...cat,
+                subcategories: cat.subcategories.map((sub) => subMap[sub._id] || sub),
+            }));
+            setCategories(categoriesWithSubsAndProducts);
+        } catch (err) {
+            console.error("Error updating category:", err);
+            setError("Failed to update category");
+        }
+    };
+
+    const deleteCategory = async (categoryId) => {
+        try {
+            await axios.delete(`/api/categories?id=${categoryId}`);
+
+            // Refetch categories to update the UI
+            const catRes = await axios.get("/api/categories");
+            const subRes = await axios.get("/api/subcategories");
+            const subMap = {};
+            subRes.data.forEach((sub) => {
+                subMap[sub._id] = sub;
+            });
+            const categoriesWithSubsAndProducts = catRes.data.map((cat) => ({
+                ...cat,
+                subcategories: cat.subcategories.map((sub) => subMap[sub._id] || sub),
+            }));
+            setCategories(categoriesWithSubsAndProducts);
+        } catch (err) {
+            setError("Failed to delete category");
+        }
+    };
+
     // Get subcategories for selected category
     const getSubcategoriesForCategory = (categoryId) => {
         const category = categories.find(
@@ -303,6 +352,8 @@ const PrachiTrade = () => {
                             categoryForm={categoryForm}
                             setCategoryForm={setCategoryForm}
                             addCategory={addCategory}
+                            editCategory={editCategory} // Pass the new function
+                            deleteCategory={deleteCategory} // Pass the new function
                         />
                     </TabsContent>
                     <TabsContent value="subcategories" className="mt-6">
