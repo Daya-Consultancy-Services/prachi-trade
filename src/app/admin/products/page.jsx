@@ -225,7 +225,63 @@ const PrachiTrade = () => {
         }
     };
 
-    // Add product
+    // Edit product
+    const editProduct = async (productId, newData) => {
+        try {
+            const response = await axios.put(`/api/products`, {
+                id: productId,
+                name: newData.name,
+                description: newData.description,
+                brand: newData.brand,
+                price: newData.price,
+                unit: newData.unit,
+                image: newData.image,
+            });
+
+            // Refetch categories to update the UI
+            const catRes = await axios.get("/api/categories");
+            const subRes = await axios.get("/api/subcategories");
+            const subMap = {};
+            subRes.data.forEach((sub) => {
+                subMap[sub._id] = sub;
+            });
+            const categoriesWithSubsAndProducts = catRes.data.map((cat) => ({
+                ...cat,
+                subcategories: cat.subcategories.map((sub) => subMap[sub._id] || sub),
+            }));
+            setCategories(categoriesWithSubsAndProducts);
+
+            return response.data;
+        } catch (err) {
+            console.error("Error updating product:", err);
+            setError("Failed to update product");
+            throw err;
+        }
+    };
+
+    // Delete product
+    const deleteProduct = async (productId) => {
+        try {
+            await axios.delete(`/api/products?id=${productId}`);
+
+            // Refetch categories to update the UI
+            const catRes = await axios.get("/api/categories");
+            const subRes = await axios.get("/api/subcategories");
+            const subMap = {};
+            subRes.data.forEach((sub) => {
+                subMap[sub._id] = sub;
+            });
+            const categoriesWithSubsAndProducts = catRes.data.map((cat) => ({
+                ...cat,
+                subcategories: cat.subcategories.map((sub) => subMap[sub._id] || sub),
+            }));
+            setCategories(categoriesWithSubsAndProducts);
+        } catch (err) {
+            setError("Failed to delete product");
+        }
+    };
+
+    // Update your existing addProduct function to include description
     const addProduct = async () => {
         if (productForm.name.trim() && productForm.categoryId && productForm.subcategoryId) {
             try {
@@ -237,7 +293,7 @@ const PrachiTrade = () => {
                     stock: parseInt(productForm.stock) || 0,
                     subcategoryId: productForm.subcategoryId,
                     image: productForm.image,
-                    description: productForm.description,
+                    description: productForm.description, // Added description
                 });
                 // Refetch categories and subcategories
                 const catRes = await axios.get("/api/categories");
@@ -260,7 +316,7 @@ const PrachiTrade = () => {
                     categoryId: "",
                     subcategoryId: "",
                     image: "",
-                    description: "",
+                    description: "", // Reset description
                 });
                 setOpenDialog(null);
             } catch (err) {
@@ -409,6 +465,8 @@ const PrachiTrade = () => {
                             productForm={productForm}
                             setProductForm={setProductForm}
                             addProduct={addProduct}
+                            editProduct={editProduct} 
+                            deleteProduct={deleteProduct} 
                             getSubcategoriesForCategory={getSubcategoriesForCategory}
                             handleImageUpload={handleImageUpload}
                             imageUploading={imageUploading}

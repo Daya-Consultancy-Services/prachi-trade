@@ -26,65 +26,184 @@ export default function CategoryPage() {
         });
     }, [categoryId]);
 
-
-
-    // Gather all products from all subcategories of this category
     const products = subcategories.flatMap((sub) => sub.products || []);
-    useEffect(() => {
-        console.log("products:", subcategories);
-    }, [products]);
 
     if (loading) {
         return (
-            <div className="flex justify-center space-x-10 p-8">
-                {[1, 2, 3, 4].map((i) => (
-                    <Skeleton key={i} className="w-72 h-96" />
-                ))}
+            <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white">
+                <Header />
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 p-8 max-w-7xl mx-auto">
+                    {[...Array(8)].map((_, i) => (
+                        <div key={i} className="flex flex-col space-y-3">
+                            <Skeleton className="h-60 w-full rounded-lg" />
+                            <Skeleton className="h-4 w-3/4 rounded" />
+                            <Skeleton className="h-4 w-1/2 rounded" />
+                            <Skeleton className="h-10 w-full rounded-full mt-4" />
+                        </div>
+                    ))}
+                </div>
+                <Footer />
             </div>
         );
     }
 
     return (
-        <div>
+        <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white">
             <Header />
-            <section className="py-12 bg-white text-center">
-                <div>
-                    <p className="text-gray-700 mb-4">
-                        {category?.name ? `All products in ${category.name}` : "Category"}
+
+            {/* Hero Section */}
+            <div className="relative bg-gradient-to-r from-orange-500 to-orange-600 py-20 px-4 sm:px-6 lg:px-8 text-center">
+                <div className="absolute inset-0 bg-black opacity-10"></div>
+                <div className="relative max-w-4xl mx-auto">
+                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-md">
+                        {category?.name || "Category"}
+                    </h1>
+                    <p className="text-xl text-orange-100 max-w-2xl mx-auto">
+                        {category?.description || "Premium quality products for all your needs"}
                     </p>
                 </div>
-                <h6>PRODUCTS</h6>
-                <h2 className="text-3xl font-bold mb-4">
-                    Our <span className="text-orange-600">Products</span>
-                </h2>
-                <div className="flex flex-wrap justify-center gap-8 p-4">
+            </div>
+
+            {/* Breadcrumb */}
+            <div className="bg-white shadow-sm">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+                    <nav className="flex" aria-label="Breadcrumb">
+                        <ol className="inline-flex items-center space-x-1 md:space-x-3">
+                            <li className="inline-flex items-center">
+                                <Link
+                                    href="/"
+                                    className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-orange-600"
+                                >
+                                    Home
+                                </Link>
+                            </li>
+                            <li aria-current="page">
+                                <div className="flex items-center">
+                                    <svg
+                                        className="w-3 h-3 text-gray-400 mx-1"
+                                        aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 6 10"
+                                    >
+                                        <path
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="m1 9 4-4-4-4"
+                                        />
+                                    </svg>
+                                    <span className="ml-1 text-sm font-medium text-orange-600 md:ml-2 capitalize">
+                                        {category?.name || "Category"}
+                                    </span>
+                                </div>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+            <main className="flex-grow py-12 px-4 sm:px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto">
+                    {/* Category Title */}
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl font-bold text-gray-900 mb-3 relative inline-block">
+                            Our <span className="text-orange-600">Products</span>
+                            <span className="absolute bottom-0 left-0 w-full h-1 bg-orange-500 transform translate-y-1 scale-x-75"></span>
+                        </h2>
+                        <p className="text-gray-600 max-w-2xl mx-auto">
+                            Browse through our extensive collection of high-quality products
+                        </p>
+                    </div>
+
+                    {/* Product Grid */}
                     {products.length > 0 ? (
-                        products.map((prod) => (
-                            <div
-                                key={prod._id}
-                                className="bg-white border rounded-xl shadow-md p-4 w-72 min-w-[270px] flex flex-col items-center"
-                            >
-                                <img
-                                    src={prod.image || "/cement4.jpg"}
-                                    alt={prod.name}
-                                    className="w-full h-40 object-cover mb-4 rounded"
-                                />
-                                <h3 className="text-xl font-bold mb-2">
-                                    {prod.brand || prod.name}
-                                </h3>
-                                <p className="text-sm mb-4">{prod.name}</p>
-                                <button className="bg-orange-600 text-white py-2 px-4 rounded-full font-bold">
-                                    <Link href={`/product/${prod._id}`} className="block px-4 py-2">
-                                        VIEW PRODUCT
-                                    </Link>
-                                </button>
-                            </div>
-                        ))
+                        <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                            {products.map((prod) => (
+                                <div
+                                    key={prod._id}
+                                    className="group bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-orange-200"
+                                >
+                                    <div className="relative overflow-hidden">
+                                        <img
+                                            src={prod.image || "/cement4.jpg"}
+                                            alt={prod.name}
+                                            className="w-full h-60 object-cover transition-transform duration-500 group-hover:scale-105"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                    </div>
+                                    <div className="p-5">
+                                        <div className="mb-3">
+                                            <span className="inline-block bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full mb-2">
+                                                {prod.brand || "Premium"}
+                                            </span>
+                                            <h3 className="text-lg font-bold text-gray-900 mb-1 line-clamp-1">
+                                                {prod.name}
+                                            </h3>
+                                            {prod.price && (
+                                                <p className="text-gray-900 font-semibold mt-1">
+                                                    ${prod.price.toFixed(2)}
+                                                </p>
+                                            )}
+                                        </div>
+                                        <Link
+                                            href={`/product/${prod._id}`}
+                                            className="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-200 shadow-sm hover:shadow-md"
+                                        >
+                                            View Details
+                                            <svg
+                                                className="ml-2 -mr-1 w-4 h-4"
+                                                fill="currentColor"
+                                                viewBox="0 0 20 20"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    fillRule="evenodd"
+                                                    d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                                                    clipRule="evenodd"
+                                                ></path>
+                                            </svg>
+                                        </Link>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     ) : (
-                        <p>No products found in this category.</p>
+                        <div className="text-center py-16">
+                            <div className="mx-auto w-24 h-24 text-gray-400 mb-4">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                            </div>
+                            <h3 className="text-lg font-medium text-gray-900 mb-1">
+                                No products found
+                            </h3>
+                            <p className="text-gray-500 max-w-md mx-auto">
+                                We couldn't find any products in this category. Please check back
+                                later.
+                            </p>
+                            <Link
+                                href="/"
+                                className="mt-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                            >
+                                Back to Home
+                            </Link>
+                        </div>
                     )}
                 </div>
-            </section>
+            </main>
+
             <BrandsSection />
             <Footer />
         </div>

@@ -10,7 +10,7 @@ export async function GET() {
         const subcategories = await Subcategory.find()
             .populate({
                 path: "products",
-                select: "name image brand price unit stock subcategory createdAt updatedAt",
+                select: "name image brand price unit stock subcategory createdAt updatedAt description",
                 model: Product,
             })
             .populate("category", "name");
