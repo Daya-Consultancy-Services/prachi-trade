@@ -21,13 +21,18 @@ export default function CategoryPage() {
         ]).then(([categories, subcategories]) => {
             const found = categories.find((cat) => cat._id === categoryId);
             setCategory(found);
-            setSubcategories(subcategories.filter((sub) => sub.category === categoryId));
+            setSubcategories(subcategories.filter((sub) => sub.category._id === categoryId));
             setLoading(false);
         });
     }, [categoryId]);
 
+
+
     // Gather all products from all subcategories of this category
     const products = subcategories.flatMap((sub) => sub.products || []);
+    useEffect(() => {
+        console.log("products:", subcategories);
+    }, [products]);
 
     if (loading) {
         return (

@@ -22,7 +22,6 @@ import { toast } from "sonner";
 export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [categories, setCategories] = useState([]);
-    const [subcategories, setSubcategories] = useState([]);
     const [enquiryOpen, setEnquiryOpen] = useState(false);
     const [form, setForm] = useState({ name: "", email: "", mobile: "", message: "", product: "" });
     const [loading, setLoading] = useState(false);
@@ -31,9 +30,6 @@ export default function Header() {
         fetch("/api/categories")
             .then((res) => res.json())
             .then((data) => setCategories(data));
-        fetch("/api/subcategories")
-            .then((res) => res.json())
-            .then((data) => setSubcategories(data));
     }, []);
 
     const handleChange = (e) => {
@@ -105,47 +101,73 @@ export default function Header() {
                             {item.hasDropdown && (
                                 <div className="absolute left-1/2 top-full z-50 transform -translate-x-1/2 mt-4 w-[900px] bg-white rounded-lg shadow-lg p-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                                     <div className="grid grid-cols-2 grid-rows-2 gap-x-20 gap-y-8">
-                                        {categories.slice(0, 4).map((cat) => {
-                                            // Gather all products from all subcategories of this category
-                                            const products = subcategories
-                                                .filter((sub) => sub.category === cat._id)
-                                                .flatMap((sub) => sub.products || []);
-
-                                            return (
-                                                <div key={cat._id} className="min-w-[200px]">
-                                                    <div className="font-bold text-blue-600 text-lg mb-2">
-                                                        <Link
-                                                            href={`/${cat.name
-                                                                .toLowerCase()
-                                                                .replace(/ /g, "")}`}
-                                                            className="font-bold text-blue-600 text-lg mb-2 hover:underline"
-                                                        >
-                                                            {cat.name}
-                                                        </Link>
-                                                    </div>
-                                                    <ul className="ml-2 space-y-1">
-                                                        {products.length > 0 ? (
-                                                            products.map((prod) => (
-                                                                <li
-                                                                    key={prod._id}
-                                                                    className="text-sm text-gray-800 hover:text-orange-600 cursor-pointer"
-                                                                >
-                                                                    <Link
-                                                                        href={`/product/${prod._id}`}
-                                                                    >
-                                                                        {prod.brand}
-                                                                    </Link>
-                                                                </li>
-                                                            ))
-                                                        ) : (
-                                                            <li className="text-xs text-gray-400 italic">
-                                                                No products
-                                                            </li>
-                                                        )}
-                                                    </ul>
+                                        {categories?.slice(0, 4).map((category) => (
+                                            <div key={category._id} className="min-w-[200px]">
+                                                <div className="font-bold text-blue-600 text-lg mb-2">
+                                                    <Link
+                                                        href={`/category/${category?._id
+                                                            .toLowerCase()
+                                                            .replace(/ /g, "")}`}
+                                                        className="font-bold text-blue-600 text-lg mb-2 hover:underline"
+                                                    >
+                                                        {category.name}
+                                                    </Link>
                                                 </div>
-                                            );
-                                        })}
+                                                <ul className="ml-2 space-y-2">
+                                                    {category.subcategories?.length > 0 ? (
+                                                        category.subcategories.map(
+                                                            (subcategory) => (
+                                                                <li key={subcategory._id}>
+                                                                    <Link
+                                                                        href={`/subcategory/${subcategory._id}`}
+                                                                        className="font-medium text-gray-800 hover:text-orange-600 cursor-pointer"
+                                                                    >
+                                                                        {subcategory.name}
+                                                                    </Link>
+                                                                    {subcategory.products?.length >
+                                                                        0 && (
+                                                                        <ul className="ml-4 mt-1 space-y-1">
+                                                                            {subcategory.products
+                                                                                .slice(0, 5)
+                                                                                .map((product) => (
+                                                                                    <li
+                                                                                        key={
+                                                                                            product._id
+                                                                                        }
+                                                                                        className="text-xs text-gray-600 hover:text-orange-600 cursor-pointer"
+                                                                                    >
+                                                                                        <Link
+                                                                                            href={`/product/${product._id}`}
+                                                                                        >
+                                                                                            {product.brand ||
+                                                                                                product.name}
+                                                                                        </Link>
+                                                                                    </li>
+                                                                                ))}
+                                                                            {subcategory.products
+                                                                                .length > 5 && (
+                                                                                <li className="text-xs text-gray-500 italic">
+                                                                                    +
+                                                                                    {subcategory
+                                                                                        .products
+                                                                                        .length -
+                                                                                        5}{" "}
+                                                                                    more
+                                                                                </li>
+                                                                            )}
+                                                                        </ul>
+                                                                    )}
+                                                                </li>
+                                                            )
+                                                        )
+                                                    ) : (
+                                                        <li className="text-xs text-gray-400 italic">
+                                                            No subcategories
+                                                        </li>
+                                                    )}
+                                                </ul>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             )}
@@ -274,32 +296,33 @@ export default function Header() {
                                     {/* Dynamic Dropdown for PRODUCTS (Mobile) */}
                                     {item.hasDropdown && (
                                         <div className="pl-8 bg-gray-800">
-                                            {categories.map((cat) => (
-                                                <div key={cat._id}>
+                                            {categories.map((category) => (
+                                                <div key={category._id}>
                                                     <Link
-                                                        href={`/category/${cat._id}`}
+                                                        href={`/category/${category._id}`}
                                                         className="block px-4 py-2 hover:text-orange-500"
                                                         onClick={() => setMobileMenuOpen(false)}
                                                     >
-                                                        {cat.name}
+                                                        {category.name}
                                                     </Link>
-                                                    {cat.subcategories &&
-                                                        cat.subcategories.length > 0 && (
-                                                            <div className="pl-4">
-                                                                {cat.subcategories.map((sub) => (
+                                                    {category.subcategories?.length > 0 && (
+                                                        <div className="pl-4">
+                                                            {category.subcategories.map(
+                                                                (subcategory) => (
                                                                     <Link
-                                                                        key={sub._id}
-                                                                        href={`/subcategory/${sub._id}`}
+                                                                        key={subcategory._id}
+                                                                        href={`/subcategory/${subcategory._id}`}
                                                                         className="block px-4 py-2 hover:text-orange-500"
                                                                         onClick={() =>
                                                                             setMobileMenuOpen(false)
                                                                         }
                                                                     >
-                                                                        {sub.name}
+                                                                        {subcategory.name}
                                                                     </Link>
-                                                                ))}
-                                                            </div>
-                                                        )}
+                                                                )
+                                                            )}
+                                                        </div>
+                                                    )}
                                                 </div>
                                             ))}
                                         </div>

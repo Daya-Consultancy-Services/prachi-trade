@@ -65,7 +65,7 @@ export default function SubcategoryPage() {
                                             <div className="flex-1 text-left">
                                                 <div className="bg-orange-100 px-4 py-2 rounded mb-2 inline-block">
                                                     <h2 className="text-2xl font-bold text-orange-700">
-                                                        {prod.name}
+                                                        {prod.name} ({prod.brand})
                                                     </h2>
                                                 </div>
                                                 <p className="mb-2 text-gray-700 text-base">
@@ -78,7 +78,7 @@ export default function SubcategoryPage() {
                                             <div className="flex-1 text-left md:mr-8">
                                                 <div className="bg-orange-100 px-4 py-2 rounded mb-2 inline-block">
                                                     <h2 className="text-2xl font-bold text-orange-700">
-                                                        {prod.name}
+                                                        {prod.name} ({prod.brand})
                                                     </h2>
                                                 </div>
                                                 <p className="mb-2 text-gray-700 text-base">

@@ -1,27 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Edit2, Trash2, Package, Building, Palette, ShoppingCart } from "lucide-react";
 import AdminLayout from "@/components/admin-layout";
@@ -161,6 +141,57 @@ const PrachiTrade = () => {
             } catch (err) {
                 setError("Failed to add subcategory");
             }
+        }
+    };
+
+    // Add these functions in your PrachiTrade component
+    const editSubcategory = async (subcategoryId, newData) => {
+        try {
+            const response = await axios.put(`/api/subcategories?id=${subcategoryId}`, {
+                name: newData.name,
+                description: newData.description,
+                categoryId: newData.categoryId,
+            });
+
+            // Refetch categories to update the UI
+            const catRes = await axios.get("/api/categories");
+            const subRes = await axios.get("/api/subcategories");
+            const subMap = {};
+            subRes.data.forEach((sub) => {
+                subMap[sub._id] = sub;
+            });
+            const categoriesWithSubsAndProducts = catRes.data.map((cat) => ({
+                ...cat,
+                subcategories: cat.subcategories.map((sub) => subMap[sub._id] || sub),
+            }));
+            setCategories(categoriesWithSubsAndProducts);
+
+            return response.data;
+        } catch (err) {
+            console.error("Error updating subcategory:", err);
+            setError("Failed to update subcategory");
+            throw err; // Re-throw the error to handle it in the calling component
+        }
+    };
+
+    const deleteSubcategory = async (subcategoryId) => {
+        try {
+            await axios.delete(`/api/subcategories?id=${subcategoryId}`);
+
+            // Refetch categories to update the UI
+            const catRes = await axios.get("/api/categories");
+            const subRes = await axios.get("/api/subcategories");
+            const subMap = {};
+            subRes.data.forEach((sub) => {
+                subMap[sub._id] = sub;
+            });
+            const categoriesWithSubsAndProducts = catRes.data.map((cat) => ({
+                ...cat,
+                subcategories: cat.subcategories.map((sub) => subMap[sub._id] || sub),
+            }));
+            setCategories(categoriesWithSubsAndProducts);
+        } catch (err) {
+            setError("Failed to delete subcategory");
         }
     };
 
@@ -365,6 +396,8 @@ const PrachiTrade = () => {
                             subcategoryForm={subcategoryForm}
                             setSubcategoryForm={setSubcategoryForm}
                             addSubcategory={addSubcategory}
+                            editSubcategory={editSubcategory}
+                            deleteSubcategory={deleteSubcategory}
                         />
                     </TabsContent>
                     <TabsContent value="products" className="mt-6">
@@ -387,8 +420,6 @@ const PrachiTrade = () => {
         </div>
     );
 };
-
-// export default PrachiTrade;
 
 const ProductsPage = () => (
     <AdminLayout>

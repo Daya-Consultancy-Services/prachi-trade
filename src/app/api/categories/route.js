@@ -2,13 +2,22 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import Category from "@/models/Category";
 import Subcategory from "@/models/Subcategory";
+import Product from "@/models/Product";
 
 export async function GET() {
+    console.log("getCategories called");
     await dbConnect();
     try {
-        const categories = await Category.find().populate("subcategories");
+        const categories = await Category.find().populate({
+            path: "subcategories",
+            populate: {
+                path: "products",
+                select: "name brand", 
+            },
+        });
         return NextResponse.json(categories);
     } catch (error) {
+        console.log("getCategories error   :", error)
         return NextResponse.json({ error: "Failed to fetch categories" }, { status: 500 });
     }
 }

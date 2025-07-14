@@ -1,13 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,7 +11,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Plus } from "lucide-react";
+import { Plus, Save } from "lucide-react";
 
 const AdminSubcategoryForm = ({
     open,
@@ -26,69 +19,93 @@ const AdminSubcategoryForm = ({
     subcategoryForm,
     setSubcategoryForm,
     categories,
-    addSubcategory,
-}) => (
-    <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-            <Button className="flex items-center gap-2">
-                <Plus className="w-4 h-4" />
-                Add Subcategory
-            </Button>
-        </DialogTrigger>
-        <DialogContent>
-            <DialogHeader>
-                <DialogTitle>Add New Subcategory</DialogTitle>
-                <DialogDescription>Create a new product subcategory</DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4">
-                <div>
-                    <Label htmlFor="subcategoryCategory">Category</Label>
-                    <Select
-                        value={subcategoryForm.categoryId}
-                        onValueChange={(value) =>
-                            setSubcategoryForm({ ...subcategoryForm, categoryId: value })
-                        }
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {categories.map((category) => (
-                                <SelectItem key={category._id} value={category._id.toString()}>
-                                    {category.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div>
-                    <Label htmlFor="subcategoryName">Subcategory Name</Label>
-                    <Input
-                        id="subcategoryName"
-                        value={subcategoryForm.name}
-                        onChange={(e) =>
-                            setSubcategoryForm({ ...subcategoryForm, name: e.target.value })
-                        }
-                        placeholder="e.g., Cement"
-                    />
-                </div>
-                <div>
-                    <Label htmlFor="subcategoryDescription">Description</Label>
-                    <Textarea
-                        id="subcategoryDescription"
-                        value={subcategoryForm.description}
-                        onChange={(e) =>
-                            setSubcategoryForm({ ...subcategoryForm, description: e.target.value })
-                        }
-                        placeholder="Brief description of the subcategory"
-                    />
-                </div>
-                <Button onClick={addSubcategory} className="w-full">
+    onSubmit,
+    isEditMode = false,
+}) => {
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
+        onSubmit();
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            {!isEditMode && (
+                <Button onClick={() => setOpen(true)} className="flex items-center gap-2">
+                    <Plus className="w-4 h-4" />
                     Add Subcategory
                 </Button>
-            </div>
-        </DialogContent>
-    </Dialog>
-);
+            )}
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>
+                        {isEditMode ? "Edit Subcategory" : "Add New Subcategory"}
+                    </DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleFormSubmit} className="space-y-4">
+                    <div>
+                        <Label htmlFor="subcategoryCategory">Category</Label>
+                        <Select
+                            value={subcategoryForm.categoryId}
+                            onValueChange={(value) =>
+                                setSubcategoryForm({ ...subcategoryForm, categoryId: value })
+                            }
+                            required
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select category" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {categories.map((category) => (
+                                    <SelectItem key={category._id} value={category._id.toString()}>
+                                        {category.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div>
+                        <Label htmlFor="subcategoryName">Subcategory Name</Label>
+                        <Input
+                            id="subcategoryName"
+                            value={subcategoryForm.name}
+                            onChange={(e) =>
+                                setSubcategoryForm({ ...subcategoryForm, name: e.target.value })
+                            }
+                            placeholder="e.g., Cement"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <Label htmlFor="subcategoryDescription">Description</Label>
+                        <Textarea
+                            id="subcategoryDescription"
+                            value={subcategoryForm.description}
+                            onChange={(e) =>
+                                setSubcategoryForm({
+                                    ...subcategoryForm,
+                                    description: e.target.value,
+                                })
+                            }
+                            placeholder="Brief description of the subcategory"
+                        />
+                    </div>
+                    <Button type="submit" className="w-full">
+                        {isEditMode ? (
+                            <>
+                                <Save className="w-4 h-4 mr-2" />
+                                Update Subcategory
+                            </>
+                        ) : (
+                            <>
+                                <Plus className="w-4 h-4 mr-2" />
+                                Add Subcategory
+                            </>
+                        )}
+                    </Button>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
+};
 
 export default AdminSubcategoryForm;
