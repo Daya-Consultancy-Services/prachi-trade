@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Building, Package, ShoppingCart } from "lucide-react";
 
-const AdminProductStats = ({ totalCategories, totalSubcategories, totalProducts, totalStock }) => (
+const AdminProductStats = ({ totalCategories, totalSubcategories, totalProducts }) => (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <Card>
             <CardContent className="p-6">
@@ -43,7 +43,7 @@ const AdminProductStats = ({ totalCategories, totalSubcategories, totalProducts,
                 </div>
             </CardContent>
         </Card>
-        <Card>
+        {/* <Card>
             <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                     <div>
@@ -55,7 +55,7 @@ const AdminProductStats = ({ totalCategories, totalSubcategories, totalProducts,
                     </div>
                 </div>
             </CardContent>
-        </Card>
+        </Card> */}
     </div>
 );
 

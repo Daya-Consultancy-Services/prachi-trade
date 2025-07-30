@@ -9,7 +9,7 @@ import Link from "next/link";
 export default function ProductDetailPage() {
     const { productId } = useParams();
     const [product, setProduct] = useState(null);
-    const [enquiry, setEnquiry] = useState({ name: "", email: "", mobile: "", message: "" });
+    const [enquiry, setEnquiry] = useState({ name: "", email: "", mobile: "", message: "" , product: "" });
     const [enquiryStatus, setEnquiryStatus] = useState(null);
     const [subcategoryProducts, setSubcategoryProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -332,6 +332,7 @@ export default function ProductDetailPage() {
                                                 email: "",
                                                 mobile: "",
                                                 message: "",
+                                                product: "",
                                             });
                                             setEnquiryStatus({
                                                 success: true,
@@ -401,6 +402,21 @@ export default function ProductDetailPage() {
                                                 }
                                             />
                                         </div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                            Product Name 
+                                        </label>
+                                        <input
+                                            type="text"
+                                            required
+                                            placeholder="Cement , Paint, etc."
+                                            className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200"
+                                            value={product.name}
+                                            onChange={(e) =>
+                                                setEnquiry({ ...enquiry, name: e.target.value })
+                                            }
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">

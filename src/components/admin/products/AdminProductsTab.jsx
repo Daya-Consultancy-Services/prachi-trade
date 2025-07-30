@@ -75,9 +75,9 @@ const AdminProductsTab = ({
                                                     <th className="border border-gray-200 p-3 text-left">
                                                         Unit
                                                     </th>
-                                                    <th className="border border-gray-200 p-3 text-left">
+                                                    {/* <th className="border border-gray-200 p-3 text-left">
                                                         Stock
-                                                    </th>
+                                                    </th> */}
                                                     <th className="border border-gray-200 p-3 text-left">
                                                         Actions
                                                     </th>
@@ -101,7 +101,7 @@ const AdminProductsTab = ({
                                                         <td className="border border-gray-200 p-3">
                                                             {product.unit}
                                                         </td>
-                                                        <td className="border border-gray-200 p-3">
+                                                        {/* <td className="border border-gray-200 p-3">
                                                             <Badge
                                                                 variant={
                                                                     product.stock > 50
@@ -113,7 +113,7 @@ const AdminProductsTab = ({
                                                             >
                                                                 {product.stock}
                                                             </Badge>
-                                                        </td>
+                                                        </td> */}
                                                         <td className="border border-gray-200 p-3">
                                                             <div className="flex gap-2">
                                                                 <Button

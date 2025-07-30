@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart3, Package, MessageSquare, Users, LogOut, X } from "lucide-react";
+import { BarChart3, Package, MessageSquare, Users, LogOut, X, ImageIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -63,6 +63,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, enquiries }) => {
                                 {enquiries.filter((e) => e.status === "unread").length}
                             </span>
                         )}
+                    </Link>
+                    <Link
+                        href="/admin/hero-slides"
+                        className={`w-full flex items-center px-4 py-2 text-left rounded-lg transition-colors ${
+                            pathname === "/admin/hero-slides"
+                                ? "bg-blue-600 text-white"
+                                : "text-gray-300 hover:bg-gray-700"
+                        }`}
+                    >
+                        <ImageIcon className="mr-3" size={20} />{" "}
+                        {/* Add this import from lucide-react */}
+                        Carousel Management
                     </Link>
                 </div>
                 <div className="absolute bottom-4 left-4 right-4">

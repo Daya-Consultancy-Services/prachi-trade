@@ -38,7 +38,7 @@ const PrachiTrade = () => {
         brand: "",
         price: "",
         unit: "",
-        stock: "",
+        // stock: "",
         categoryId: "",
         subcategoryId: "",
         image: "",
@@ -290,7 +290,7 @@ const PrachiTrade = () => {
                     brand: productForm.brand,
                     price: parseFloat(productForm.price) || 0,
                     unit: productForm.unit,
-                    stock: parseInt(productForm.stock) || 0,
+                    // stock: parseInt(productForm.stock) || 0,
                     subcategoryId: productForm.subcategoryId,
                     image: productForm.image,
                     description: productForm.description, // Added description
@@ -312,7 +312,7 @@ const PrachiTrade = () => {
                     brand: "",
                     price: "",
                     unit: "",
-                    stock: "",
+                    // stock: "",
                     categoryId: "",
                     subcategoryId: "",
                     image: "",
@@ -388,13 +388,13 @@ const PrachiTrade = () => {
         0
     );
 
-    const totalStock = categories.reduce((sum, cat) => {
-        const catSum = (cat.subcategories || []).reduce((subSum, sub) => {
-            return subSum + sub?.products.length;
-        }, 0);
+    // const totalStock = categories.reduce((sum, cat) => {
+    //     const catSum = (cat.subcategories || []).reduce((subSum, sub) => {
+    //         return subSum + sub?.products.length;
+    //     }, 0);
 
-        return sum + catSum;
-    }, 0);
+    //     return sum + catSum;
+    // }, 0);
 
     if (loading)
         return (
@@ -417,7 +417,7 @@ const PrachiTrade = () => {
                     totalCategories={totalCategories}
                     totalSubcategories={totalSubcategories}
                     totalProducts={totalProducts}
-                    totalStock={totalStock}
+                    // totalStock={totalStock}
                 />
                 {/* Main Content */}
                 <Tabs value={activeTab} onValueChange={setActiveTab}>

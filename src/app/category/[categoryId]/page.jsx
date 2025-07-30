@@ -104,7 +104,7 @@ export default function CategoryPage() {
                 </div>
             </div>
 
-            <main className="flex-grow py-12 px-4 sm:px-6 lg:px-8">
+            <main className="flex-grow py-12 px-4 sm:px-6 lg:px-36">
                 <div className="max-w-7xl mx-auto">
                     {/* Category Title */}
                     <div className="text-center mb-12">
@@ -117,43 +117,52 @@ export default function CategoryPage() {
                         </p>
                     </div>
 
-                    {/* Product Grid */}
+                    {/* Product List */}
                     {products.length > 0 ? (
-                        <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                            {products.map((prod) => (
+                        <div className="space-y-8">
+                            {products.map((prod, index) => (
                                 <div
                                     key={prod._id}
-                                    className="group bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-orange-200"
+                                    className={`flex flex-col md:flex-row rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-orange-200 bg-white h-76 ${
+                                        index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+                                    }`}
                                 >
-                                    <div className="relative overflow-hidden">
+                                    {/* Product Image - Fixed height container */}
+                                    <div className="md:w-1/3 h-full relative overflow-hidden">
                                         <img
                                             src={prod.image || "/cement4.jpg"}
                                             alt={prod.name}
-                                            className="w-full h-60 object-cover transition-transform duration-500 group-hover:scale-105"
+                                            className="w-full h-full object-contain transition-transform duration-500 hover:scale-105"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                                     </div>
-                                    <div className="p-5">
-                                        <div className="mb-3">
+
+                                    {/* Product Details - Fixed height container */}
+                                    <div className="md:w-2/3 p-6 md:p-8 flex flex-col justify-center h-full">
+                                        <div className="mb-4">
                                             <span className="inline-block bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full mb-2">
                                                 {prod.brand || "Premium"}
                                             </span>
-                                            <h3 className="text-lg font-bold text-gray-900 mb-1 line-clamp-1">
+                                            <h3 className="text-2xl font-bold text-gray-900 mb-2">
                                                 {prod.name}
                                             </h3>
+                                            <p className="text-gray-600 mb-4 line-clamp-3">
+                                                {prod.description ||
+                                                    "High-quality product with premium features."}
+                                            </p>
                                             {prod.price && (
-                                                <p className="text-gray-900 font-semibold mt-1">
+                                                <p className="text-2xl font-bold text-orange-600 mb-4">
                                                     ${prod.price.toFixed(2)}
                                                 </p>
                                             )}
                                         </div>
                                         <Link
                                             href={`/product/${prod._id}`}
-                                            className="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-200 shadow-sm hover:shadow-md"
+                                            className="w-fit inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-200 shadow-sm hover:shadow-md"
                                         >
                                             View Details
                                             <svg
-                                                className="ml-2 -mr-1 w-4 h-4"
+                                                className="ml-2 -mr-1 w-5 h-5"
                                                 fill="currentColor"
                                                 viewBox="0 0 20 20"
                                                 xmlns="http://www.w3.org/2000/svg"
@@ -203,7 +212,6 @@ export default function CategoryPage() {
                     )}
                 </div>
             </main>
-
             <BrandsSection />
             <Footer />
         </div>
